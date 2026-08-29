@@ -7,8 +7,8 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 ## Onboarding
 
 - [x] **US-1**: As a first-time user, I can choose a portfolio template (50/30/20 or 70/30) so the app knows my target allocation.
-- [ ] **US-2**: As a user, my chosen template is saved persistently (offline-capable, survives app restarts) so I don't have to re-select it every visit.
-- [ ] **US-3**: As a returning user with a saved template, I skip onboarding and go straight to my portfolio view.
+- [x] **US-2**: As a user, my chosen template is saved persistently (offline-capable, survives app restarts) so I don't have to re-select it every visit.
+- [x] **US-3**: As a returning user with a saved template, I skip onboarding and go straight to my portfolio view.
 - [ ] **US-13**: As a user, I can give each part of my split a name of my own choosing, saved persistently, so I still recognize what each allocation represents even after not checking my portfolio for a long time.
 
 ## Target allocation view
