@@ -1,6 +1,6 @@
 # stblzr
 
-A simple ETF portfolio rebalancer for savings plans. Pick a target allocation template (60/30/10 or 70/30), enter your current holdings, and get the minimal set of buy/sell actions needed to rebalance. Built as a Svelte + TypeScript PWA, aimed at mobile browsers (Safari on iOS, Chrome on Android).
+A simple ETF portfolio rebalancer for savings plans. Pick a target allocation template (50/30/20 or 70/30), enter your current holdings, and get the minimal set of buy/sell actions needed to rebalance. Built as a Svelte + TypeScript PWA, aimed at mobile browsers (Safari on iOS, Chrome on Android).
 
 See [CLAUDE.md](./CLAUDE.md) for architecture notes and [USER_STORIES.md](./USER_STORIES.md) for the requirements/backlog.
 
