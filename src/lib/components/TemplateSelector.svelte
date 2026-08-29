@@ -1,8 +1,7 @@
 <script lang="ts">
+	import { PART_COLORS } from '$lib/colors';
 	import { PORTFOLIO_TEMPLATES } from '$lib/portfolio';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
-
-	const partColors = ['#38bdf8', '#a78bfa', '#fb923c'];
 </script>
 
 <div class="selector">
@@ -26,7 +25,7 @@
 							<span
 								class="segment"
 								style:width="{part.targetPct}%"
-								style:background={partColors[i % partColors.length]}
+								style:background={PART_COLORS[i % PART_COLORS.length]}
 							></span>
 						{/each}
 					</span>

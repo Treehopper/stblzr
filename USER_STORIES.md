@@ -13,13 +13,13 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 ## Target allocation view
 
-- [ ] **US-4**: As a user, I see a pie chart of my target allocation (e.g. 50/30/20 across the three portfolio parts) so I understand what I'm aiming for.
+- [x] **US-4**: As a user, I see a pie chart of my target allocation (e.g. 50/30/20 across the three portfolio parts) so I understand what I'm aiming for.
 
 ## Current holdings input
 
 - [x] **US-5**: As a user, I can enter the current currency amount I hold in each ETF/stock of my portfolio.
 - [x] **US-6**: As a user, my entered holdings are saved persistently so I don't have to re-enter them every visit.
-- [ ] **US-7**: As a user, once I've entered my holdings, I see an overlay on the pie chart with colored indicators showing which parts of my portfolio are over-weight and which are under-weight relative to target.
+- [x] **US-7**: As a user, once I've entered my holdings, I see an overlay on the pie chart with colored indicators showing which parts of my portfolio are over-weight and which are under-weight relative to target.
 
 ## Rebalancing
 

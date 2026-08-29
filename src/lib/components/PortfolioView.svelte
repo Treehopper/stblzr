@@ -1,5 +1,6 @@
 <script lang="ts">
 	import HoldingsRow from '$lib/components/HoldingsRow.svelte';
+	import PieChart from '$lib/components/PieChart.svelte';
 	import { getTemplate } from '$lib/portfolio';
 	import { buyOnlyActions } from '$lib/rebalance';
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
@@ -16,6 +17,8 @@
 
 	{#if template}
 		<p class="template-label">{template.label}</p>
+
+		<PieChart parts={template.parts} holdings={portfolioHoldings.all} />
 
 		<section>
 			<h2>Current holdings</h2>
