@@ -30,23 +30,10 @@
 							></span>
 						{/each}
 					</span>
-					<span class="parts">
-						{#each template.parts as part (part.key)}
-							<span class="part">{part.label} {part.targetPct}%</span>
-						{/each}
-					</span>
 				</button>
 			</li>
 		{/each}
 	</ul>
-
-	{#if templateSelection.id}
-		<p class="confirmation">
-			Selected: <strong
-				>{PORTFOLIO_TEMPLATES.find((t) => t.id === templateSelection.id)?.label}</strong
-			>
-		</p>
-	{/if}
 </div>
 
 <style>
@@ -115,18 +102,5 @@
 
 	.segment {
 		height: 100%;
-	}
-
-	.parts {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.25rem 0.75rem;
-		font-size: 0.875rem;
-		color: #475569;
-	}
-
-	.confirmation {
-		margin-top: 1.5rem;
-		font-size: 0.9375rem;
 	}
 </style>
