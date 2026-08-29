@@ -6,13 +6,13 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 ## Onboarding
 
-- [ ] **US-1**: As a first-time user, I can choose a portfolio template (60/30/10 or 70/30) so the app knows my target allocation.
+- [ ] **US-1**: As a first-time user, I can choose a portfolio template (50/30/20 or 70/30) so the app knows my target allocation.
 - [ ] **US-2**: As a user, my chosen template is saved persistently (offline-capable, survives app restarts) so I don't have to re-select it every visit.
 - [ ] **US-3**: As a returning user with a saved template, I skip onboarding and go straight to my portfolio view.
 
 ## Target allocation view
 
-- [ ] **US-4**: As a user, I see a pie chart of my target allocation (e.g. 60/30/10 across the three portfolio parts) so I understand what I'm aiming for.
+- [ ] **US-4**: As a user, I see a pie chart of my target allocation (e.g. 50/30/20 across the three portfolio parts) so I understand what I'm aiming for.
 
 ## Current holdings input
 
@@ -29,5 +29,5 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 - Editing/removing individual ETF/stock line items within a portfolio.
 - Changing portfolio template after onboarding (and what happens to existing holdings data).
-- Support for portfolio templates beyond 60/30/10 and 70/30 (e.g. custom allocations).
+- Support for portfolio templates beyond 50/30/20 and 70/30 (e.g. custom allocations).
 - Historical tracking of rebalancing actions over time.
