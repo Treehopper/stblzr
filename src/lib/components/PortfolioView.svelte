@@ -10,6 +10,20 @@
 	const buyActions = $derived(template ? buyOnlyActions(template, portfolioHoldings.all) : []);
 
 	let showBuyPlan = $state(false);
+	// Bumped after applying a plan so the (locally-buffered) HoldingsRow inputs remount
+	// and pick up the new stored amounts instead of showing stale, pre-apply values.
+	let holdingsVersion = $state(0);
+
+	function applyBuyPlan() {
+		for (const action of buyActions) {
+			portfolioHoldings.setAmount(
+				action.partKey,
+				portfolioHoldings.amountFor(action.partKey) + action.amount
+			);
+		}
+		holdingsVersion += 1;
+		showBuyPlan = false;
+	}
 </script>
 
 <div class="portfolio">
@@ -22,9 +36,11 @@
 
 		<section>
 			<h2>Current holdings</h2>
-			{#each template.parts as part (part.key)}
-				<HoldingsRow {part} />
-			{/each}
+			{#key holdingsVersion}
+				{#each template.parts as part (part.key)}
+					<HoldingsRow {part} />
+				{/each}
+			{/key}
 		</section>
 
 		<section>
@@ -38,6 +54,7 @@
 							<li>Buy {action.amount.toFixed(2)} of {action.partLabel}</li>
 						{/each}
 					</ul>
+					<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
 				{:else}
 					<p class="balanced">Already balanced — nothing to buy.</p>
 				{/if}
@@ -90,6 +107,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.375rem;
+	}
+
+	.apply {
+		margin-top: 0.75rem;
+		background: #16a34a;
 	}
 
 	.balanced {
