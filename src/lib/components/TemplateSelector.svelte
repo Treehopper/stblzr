@@ -1,12 +1,32 @@
 <script lang="ts">
 	import { PART_COLORS } from '$lib/colors';
+	import { CURRENCY_OPTIONS } from '$lib/currency';
 	import { PORTFOLIO_TEMPLATES } from '$lib/portfolio';
+	import { currencySelection } from '$lib/state/currency.svelte';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
 </script>
 
 <div class="selector">
 	<h1>Choose your portfolio template</h1>
 	<p class="intro">Pick the target allocation you want to rebalance towards.</p>
+
+	<div class="currency-picker">
+		<span class="currency-label" id="currency-label">Currency</span>
+		<div class="currency-options" role="group" aria-labelledby="currency-label">
+			{#each CURRENCY_OPTIONS as option (option.id)}
+				{@const isSelected = currencySelection.id === option.id}
+				<button
+					type="button"
+					class="currency-option"
+					class:selected={isSelected}
+					aria-pressed={isSelected}
+					onclick={() => currencySelection.select(option.id)}
+				>
+					{option.symbol} {option.label}
+				</button>
+			{/each}
+		</div>
+	</div>
 
 	<ul class="templates">
 		{#each PORTFOLIO_TEMPLATES as template (template.id)}
@@ -55,6 +75,39 @@
 	.intro {
 		margin: 0 0 1.5rem;
 		color: #475569;
+	}
+
+	.currency-picker {
+		margin: 0 0 1.5rem;
+	}
+
+	.currency-label {
+		display: block;
+		font-size: 0.875rem;
+		font-weight: 600;
+		margin: 0 0 0.5rem;
+	}
+
+	.currency-options {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.currency-option {
+		flex: 1;
+		text-align: center;
+		background: #f8fafc;
+		border: 2px solid #e2e8f0;
+		border-radius: 0.75rem;
+		padding: 0.5rem;
+		cursor: pointer;
+		font: inherit;
+		color: inherit;
+	}
+
+	.currency-option.selected {
+		border-color: #0f172a;
+		background: #f1f5f9;
 	}
 
 	.templates {

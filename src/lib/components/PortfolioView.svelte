@@ -1,8 +1,10 @@
 <script lang="ts">
 	import HoldingsRow from '$lib/components/HoldingsRow.svelte';
 	import PieChart from '$lib/components/PieChart.svelte';
+	import { formatCurrency } from '$lib/currency';
 	import { getTemplate } from '$lib/portfolio';
 	import { buyOnlyActions } from '$lib/rebalance';
+	import { currencySelection } from '$lib/state/currency.svelte';
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
 
@@ -51,7 +53,7 @@
 				{#if buyActions.length > 0}
 					<ul class="actions">
 						{#each buyActions as action (action.partKey)}
-							<li>Buy {action.amount.toFixed(2)} of {action.partLabel}</li>
+							<li>Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}</li>
 						{/each}
 					</ul>
 					<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
