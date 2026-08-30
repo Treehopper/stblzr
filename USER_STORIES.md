@@ -10,6 +10,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **US-2**: As a user, my chosen template is saved persistently (offline-capable, survives app restarts) so I don't have to re-select it every visit.
 - [x] **US-3**: As a returning user with a saved template, I skip onboarding and go straight to my portfolio view.
 - [ ] **US-13**: As a user, I can give each part of my split a name of my own choosing, saved persistently, so I still recognize what each allocation represents even after not checking my portfolio for a long time.
+- [x] **US-14**: As a user, I can choose my currency (Euro or US Dollar) on the onboarding screen, saved persistently, with Euro as the default, so my amounts are shown in the currency I actually use.
 
 ## Target allocation view
 
@@ -18,6 +19,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 ## Current holdings input
 
 - [x] **US-5**: As a user, I can enter the current currency amount I hold in each ETF/stock of my portfolio.
+- [x] **US-15**: As a user, all currency amounts I see are shown with the correct currency symbol and locale-appropriate separators (e.g. `1.234,56 €` for Euro, `$1,234.56` for US Dollar) based on my chosen currency.
 - [x] **US-6**: As a user, my entered holdings are saved persistently so I don't have to re-enter them every visit.
 - [x] **US-7**: As a user, once I've entered my holdings, I see an overlay on the pie chart with colored indicators showing which parts of my portfolio are over-weight and which are under-weight relative to target.
 
