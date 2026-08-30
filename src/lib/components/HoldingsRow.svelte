@@ -22,14 +22,7 @@
 	<span class="name">{part.label}</span>
 	<span class="input-group">
 		<span class="currency-symbol">{currencySymbol}</span>
-		<input
-			type="number"
-			inputmode="decimal"
-			min="0"
-			step="0.01"
-			bind:value
-			oninput={handleInput}
-		/>
+		<input type="number" inputmode="decimal" min="0" step="0.01" bind:value oninput={handleInput} />
 	</span>
 </label>
 
