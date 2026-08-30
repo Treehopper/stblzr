@@ -53,7 +53,9 @@
 				{#if buyActions.length > 0}
 					<ul class="actions">
 						{#each buyActions as action (action.partKey)}
-							<li>Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}</li>
+							<li>
+								Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
+							</li>
 						{/each}
 					</ul>
 					<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
@@ -70,10 +72,7 @@
 		max-width: 28rem;
 		margin: 0 auto;
 		padding: calc(1.5rem + env(safe-area-inset-top)) 1rem 1.5rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			sans-serif;
+		font-family: system-ui, -apple-system, sans-serif;
 		color: #0f172a;
 	}
 
