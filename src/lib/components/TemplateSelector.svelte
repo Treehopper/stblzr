@@ -29,6 +29,7 @@
 		</div>
 	</div>
 
+	<h2 class="templates-heading">Choose template</h2>
 	<ul class="templates">
 		{#each PORTFOLIO_TEMPLATES as template (template.id)}
 			{@const isSelected = templateSelection.id === template.id}
@@ -41,7 +42,21 @@
 					onclick={() => templateSelection.select(template.id)}
 				>
 					<span class="label">{template.label}</span>
-					<span class="description">{template.description}</span>
+					<span class="description">
+						<svg
+							class="info-icon"
+							viewBox="0 0 20 20"
+							width="14"
+							height="14"
+							aria-hidden="true"
+							focusable="false"
+						>
+							<circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.5" />
+							<circle cx="10" cy="6" r="1.15" fill="currentColor" />
+							<rect x="9.1" y="8.75" width="1.8" height="6" rx="0.9" fill="currentColor" />
+						</svg>
+						{template.description}
+					</span>
 					<span class="bar" role="presentation">
 						{#each template.parts as part, i (part.key)}
 							<span
@@ -77,6 +92,12 @@
 	.intro {
 		margin: 0 0 1.5rem;
 		color: #475569;
+	}
+
+	.templates-heading {
+		font-size: 1rem;
+		font-weight: 600;
+		margin: 0 0 0.75rem;
 	}
 
 	.currency-picker {
@@ -147,8 +168,16 @@
 	}
 
 	.description {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.375rem;
 		font-size: 0.875rem;
 		color: #475569;
+	}
+
+	.info-icon {
+		flex-shrink: 0;
+		color: #94a3b8;
 	}
 
 	.bar {
