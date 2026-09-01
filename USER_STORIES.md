@@ -28,7 +28,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 - [x] **US-8**: As a user, I can see a "buy-only" rebalancing option: how much additional currency to put into each under-weight part, without selling anything.
 - [ ] **US-9**: As a user, I can see a "sell-and-rebuy minimal" rebalancing option: the smallest set of sells and buys needed to hit my target allocation exactly.
-- [~] **US-10**: As a user, after picking one of the two rebalancing options (buy-only or sell-and-rebuy minimal), I get a detailed list of actions to take, each with the ETF/stock and the currency amount to buy or sell. (Pick → detailed list works for buy-only; sell-and-rebuy isn't built yet, see US-9.)
+- [~] **US-10**: As a user, for each rebalancing option (buy-only or sell-and-rebuy minimal), I get a detailed list of actions to take, each with the ETF/stock and the currency amount to buy or sell. (Buy-only's list is always visible; sell-and-rebuy isn't built yet, see US-9.)
 - [ ] **US-11**: As a user, I see a small warning indicator next to the "sell-and-rebuy minimal" option noting that selling may trigger taxes, so I'm not caught off guard before choosing it.
 - [x] **US-12**: As a user, after confirming the rebalancing option I picked, the pie chart updates to reflect the new balanced state and shows the new per-part amounts, and these updated holdings are saved persistently so they're there next time I open the app.
 

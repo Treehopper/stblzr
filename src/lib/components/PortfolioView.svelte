@@ -12,7 +12,6 @@
 	const template = $derived(templateSelection.id ? getTemplate(templateSelection.id) : undefined);
 	const buyActions = $derived(template ? buyOnlyActions(template, portfolioHoldings.all) : []);
 
-	let showBuyPlan = $state(false);
 	// Bumped after applying a plan so the (locally-buffered) HoldingsRow inputs remount
 	// and pick up the new stored amounts instead of showing stale, pre-apply values.
 	let holdingsVersion = $state(0);
@@ -25,7 +24,6 @@
 			);
 		}
 		holdingsVersion += 1;
-		showBuyPlan = false;
 	}
 </script>
 
@@ -45,21 +43,19 @@
 
 			<section>
 				<h2>Rebalance</h2>
-				<button type="button" onclick={() => (showBuyPlan = true)}>Buy only</button>
+				<h3>Buy only</h3>
 
-				{#if showBuyPlan}
-					{#if buyActions.length > 0}
-						<ul class="actions">
-							{#each buyActions as action (action.partKey)}
-								<li>
-									Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
-								</li>
-							{/each}
-						</ul>
-						<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
-					{:else}
-						<p class="balanced">Already balanced — nothing to buy.</p>
-					{/if}
+				{#if buyActions.length > 0}
+					<ul class="actions">
+						{#each buyActions as action (action.partKey)}
+							<li>
+								Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
+							</li>
+						{/each}
+					</ul>
+					<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
+				{:else}
+					<p class="balanced">Already balanced — nothing to buy.</p>
 				{/if}
 			</section>
 		{/if}
@@ -81,6 +77,13 @@
 	h2 {
 		font-size: 1rem;
 		margin: 1.5rem 0 0.5rem;
+	}
+
+	h3 {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #475569;
+		margin: 0 0 0.5rem;
 	}
 
 	button {
