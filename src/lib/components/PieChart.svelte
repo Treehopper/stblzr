@@ -12,20 +12,20 @@
 	} = $props();
 
 	const CENTER = 56;
-	const TARGET_RADIUS = 40;
-	const ACTUAL_INNER_RADIUS = 44;
-	const ACTUAL_OUTER_RADIUS = 52;
+	const ACTUAL_RADIUS = 40;
+	const TARGET_INNER_RADIUS = 44;
+	const TARGET_OUTER_RADIUS = 52;
 
 	const targetSlices = $derived(
 		computeAnnularSlices(
 			parts.map((part) => ({ key: part.key, pct: part.targetPct })),
-			{ cx: CENTER, cy: CENTER, innerRadius: 0, outerRadius: TARGET_RADIUS }
+			{ cx: CENTER, cy: CENTER, innerRadius: TARGET_INNER_RADIUS, outerRadius: TARGET_OUTER_RADIUS }
 		)
 	);
 
 	const total = $derived(parts.reduce((sum, part) => sum + (holdings[part.key] ?? 0), 0));
 
-	// The actual-holdings ring only reflects what's been entered - hidden until there's
+	// The actual-holdings disc only reflects what's been entered - hidden until there's
 	// at least some money in the portfolio, since 0/0 has no meaningful proportions.
 	const actualSlices = $derived(
 		total > 0
@@ -37,8 +37,8 @@
 					{
 						cx: CENTER,
 						cy: CENTER,
-						innerRadius: ACTUAL_INNER_RADIUS,
-						outerRadius: ACTUAL_OUTER_RADIUS
+						innerRadius: 0,
+						outerRadius: ACTUAL_RADIUS
 					}
 				)
 			: []
