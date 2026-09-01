@@ -5,6 +5,8 @@ import type { PortfolioTemplate } from './portfolio';
 const template: PortfolioTemplate = {
 	id: '70-30',
 	label: '70/30',
+	description:
+		'A simpler split favoring World over Emerging Markets, without a separate Europe allocation.',
 	parts: [
 		{ key: 'world', label: 'World', targetPct: 70 },
 		{ key: 'emerging-markets', label: 'Emerging Markets', targetPct: 30 }
