@@ -53,7 +53,9 @@
 				{#if buyActions.length > 0}
 					<ul class="actions">
 						{#each buyActions as action (action.partKey)}
-							<li>Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}</li>
+							<li>
+								Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
+							</li>
 						{/each}
 					</ul>
 					<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>

@@ -22,7 +22,8 @@
 					aria-pressed={isSelected}
 					onclick={() => currencySelection.select(option.id)}
 				>
-					{option.symbol} {option.label}
+					{option.symbol}
+					{option.label}
 				</button>
 			{/each}
 		</div>
