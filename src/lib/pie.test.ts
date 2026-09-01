@@ -38,4 +38,27 @@ describe('computeAnnularSlices', () => {
 		expect(slice.path).not.toContain('56 56');
 		expect(slice.path.trim().endsWith('Z')).toBe(true);
 	});
+
+	it('draws a full disc, not a degenerate path, when a part is 100%', () => {
+		const [slice] = computeAnnularSlices([{ key: 'a', pct: 100 }], {
+			cx: 56,
+			cy: 56,
+			innerRadius: 0,
+			outerRadius: 48
+		});
+
+		expect(slice.path.startsWith('M 8 56')).toBe(true);
+		expect(slice.path.match(/A /g)).toHaveLength(2);
+	});
+
+	it('draws a full ring, not a degenerate path, when a part is 100%', () => {
+		const [slice] = computeAnnularSlices([{ key: 'a', pct: 100 }], {
+			cx: 56,
+			cy: 56,
+			innerRadius: 40,
+			outerRadius: 48
+		});
+
+		expect(slice.path.match(/A /g)).toHaveLength(4);
+	});
 });
