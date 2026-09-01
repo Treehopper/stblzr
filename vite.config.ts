@@ -45,6 +45,10 @@ export default defineConfig({
 	],
 	test: {
 		expect: { requireAssertions: true },
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'lcov']
+		},
 		projects: [
 			{
 				extends: './vite.config.ts',

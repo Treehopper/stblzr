@@ -14,6 +14,7 @@ npm run lint         # prettier --check . && eslint .
 npm run format       # prettier --write .
 npm run test         # vitest --run (single run)
 npm run test:unit    # vitest (watch mode)
+npm run test:coverage # vitest --run --coverage
 ```
 
 Single test file: `npx vitest run path/to/file.test.ts` (or `path/to/Component.svelte.test.ts` for component tests). Filter by name: `npx vitest run -t "test name"`.
