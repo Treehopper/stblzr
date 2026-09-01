@@ -1,9 +1,9 @@
 # stblzr
 
-[![Type check](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=check)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
-[![Lint](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=lint)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
-[![Test](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=test)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
-[![Build](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=build)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Type check](https://img.shields.io/github/actions/workflow/status/Treehopper/stblzr/ci.yml?branch=develop&job=check&label=type%20check)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Lint](https://img.shields.io/github/actions/workflow/status/Treehopper/stblzr/ci.yml?branch=develop&job=lint&label=lint)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Test](https://img.shields.io/github/actions/workflow/status/Treehopper/stblzr/ci.yml?branch=develop&job=test&label=test)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Build](https://img.shields.io/github/actions/workflow/status/Treehopper/stblzr/ci.yml?branch=develop&job=build&label=build)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
 
 A simple ETF portfolio rebalancer for savings plans. Pick a target allocation template (50/30/20 or 70/30), enter your current holdings, and get the minimal set of buy/sell actions needed to rebalance. Built as a Svelte + TypeScript PWA, aimed at mobile browsers (Safari on iOS, Chrome on Android).
 
