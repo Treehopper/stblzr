@@ -1,12 +1,13 @@
 <script lang="ts">
 	import AppHeader from '$lib/components/AppHeader.svelte';
+	import { viewportSize } from '$lib/state/viewport.svelte';
 	import type { Snippet } from 'svelte';
 
 	let { title, subtitle, children }: { title: string; subtitle?: string; children: Snippet } =
 		$props();
 </script>
 
-<div class="screen">
+<div class="screen" style:height="{viewportSize.height}px">
 	<AppHeader {title} {subtitle} />
 	<div class="scroll-area">
 		{@render children()}
