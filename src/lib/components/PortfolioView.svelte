@@ -29,11 +29,9 @@
 	}
 </script>
 
-<AppScreen title="Your portfolio">
+<AppScreen title="Your portfolio" subtitle={template?.label}>
 	<div class="portfolio">
 		{#if template}
-			<p class="template-label">{template.label}</p>
-
 			<PieChart parts={template.parts} holdings={portfolioHoldings.all} />
 
 			<section>
@@ -83,11 +81,6 @@
 	h2 {
 		font-size: 1rem;
 		margin: 1.5rem 0 0.5rem;
-	}
-
-	.template-label {
-		margin: 0;
-		color: #475569;
 	}
 
 	button {

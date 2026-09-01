@@ -2,11 +2,12 @@
 	import AppHeader from '$lib/components/AppHeader.svelte';
 	import type { Snippet } from 'svelte';
 
-	let { title, children }: { title: string; children: Snippet } = $props();
+	let { title, subtitle, children }: { title: string; subtitle?: string; children: Snippet } =
+		$props();
 </script>
 
 <div class="screen">
-	<AppHeader {title} />
+	<AppHeader {title} {subtitle} />
 	<div class="scroll-area">
 		{@render children()}
 	</div>
