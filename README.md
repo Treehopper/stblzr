@@ -1,5 +1,10 @@
 # stblzr
 
+[![Type check](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=check)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Lint](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=lint)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Test](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=test)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Build](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop&job=build)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+
 A simple ETF portfolio rebalancer for savings plans. Pick a target allocation template (50/30/20 or 70/30), enter your current holdings, and get the minimal set of buy/sell actions needed to rebalance. Built as a Svelte + TypeScript PWA, aimed at mobile browsers (Safari on iOS, Chrome on Android).
 
 See [CLAUDE.md](./CLAUDE.md) for architecture notes and [USER_STORIES.md](./USER_STORIES.md) for the requirements/backlog.
