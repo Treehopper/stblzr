@@ -45,20 +45,44 @@
 	);
 </script>
 
-<svg viewBox="0 0 112 112" class="pie" role="img" aria-label="Portfolio allocation">
-	{#each targetSlices as slice, i (slice.key)}
-		<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
-	{/each}
-	{#each actualSlices as slice, i (slice.key)}
-		<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
-	{/each}
-</svg>
+<div class="chart">
+	<svg viewBox="0 0 112 112" class="pie" role="img" aria-label="Portfolio allocation">
+		{#each targetSlices as slice, i (slice.key)}
+			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
+		{/each}
+		{#each actualSlices as slice, i (slice.key)}
+			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
+		{/each}
+	</svg>
+	{#if total <= 0}
+		<p class="empty-hint">Enter your holdings below</p>
+	{/if}
+</div>
 
 <style>
-	.pie {
+	.chart {
+		position: relative;
 		width: 100%;
 		max-width: 14rem;
-		display: block;
 		margin: 1rem auto;
+	}
+
+	.pie {
+		width: 100%;
+		display: block;
+	}
+
+	.empty-hint {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		max-width: 6.5rem;
+		margin: 0 auto;
+		text-align: center;
+		font-size: 0.8125rem;
+		color: #64748b;
+		pointer-events: none;
 	}
 </style>
