@@ -2,6 +2,7 @@
 	import { PART_COLORS } from '$lib/colors';
 	import { computeAnnularSlices } from '$lib/pie';
 	import type { PortfolioPart } from '$lib/portfolio';
+	import { viewportSize } from '$lib/state/viewport.svelte';
 
 	let {
 		parts,
@@ -44,9 +45,17 @@
 				})
 			: []
 	);
+
+	// Vertical space gets tight when the on-screen keyboard opens on a phone. Squash the
+	// circle into an ellipse first to save height, then drop to horizontal bars once an
+	// ellipse would end up too flat to read. Driven by the live visual-viewport height
+	// (not a `@media (max-height)` query) since Safari never shrinks the CSS viewport
+	// for the keyboard.
+	const squashed = $derived(viewportSize.height <= 700);
+	const barsOnly = $derived(viewportSize.height <= 480);
 </script>
 
-<div class="chart">
+<div class="chart" class:squashed style:display={barsOnly ? 'none' : undefined}>
 	<svg
 		viewBox="0 0 112 112"
 		preserveAspectRatio="none"
@@ -66,7 +75,12 @@
 	{/if}
 </div>
 
-<div class="bars" role="img" aria-label="Portfolio allocation">
+<div
+	class="bars"
+	style:display={barsOnly ? 'flex' : undefined}
+	role="img"
+	aria-label="Portfolio allocation"
+>
 	<span class="bar target-bar" role="presentation">
 		{#each parts as part, i (part.key)}
 			<span
@@ -150,22 +164,7 @@
 		color: #64748b;
 	}
 
-	/* Vertical space gets tight when the on-screen keyboard opens on a phone.
-	   Squash the circle into an ellipse first to save height, then drop to
-	   horizontal bars once an ellipse would end up too flat to read. */
-	@media (max-height: 700px) {
-		.chart {
-			aspect-ratio: 2.6 / 1;
-		}
-	}
-
-	@media (max-height: 480px) {
-		.chart {
-			display: none;
-		}
-
-		.bars {
-			display: flex;
-		}
+	.chart.squashed {
+		aspect-ratio: 2.6 / 1;
 	}
 </style>

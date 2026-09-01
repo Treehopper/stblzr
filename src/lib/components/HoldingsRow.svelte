@@ -60,6 +60,7 @@
 		font: inherit;
 		text-align: right;
 		appearance: textfield;
+		-webkit-appearance: textfield;
 		-moz-appearance: textfield;
 	}
 
