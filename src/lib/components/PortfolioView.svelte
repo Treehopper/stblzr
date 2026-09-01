@@ -72,10 +72,7 @@
 		max-width: 28rem;
 		margin: 0 auto;
 		padding: calc(1.5rem + env(safe-area-inset-top)) 1rem 1.5rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			sans-serif;
+		font-family: system-ui, -apple-system, sans-serif;
 		color: #0f172a;
 	}
 
