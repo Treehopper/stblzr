@@ -41,6 +41,7 @@
 					onclick={() => templateSelection.select(template.id)}
 				>
 					<span class="label">{template.label}</span>
+					<span class="description">{template.description}</span>
 					<span class="bar" role="presentation">
 						{#each template.parts as part, i (part.key)}
 							<span
@@ -143,6 +144,11 @@
 	.label {
 		font-size: 1.125rem;
 		font-weight: 600;
+	}
+
+	.description {
+		font-size: 0.875rem;
+		color: #475569;
 	}
 
 	.bar {

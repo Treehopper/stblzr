@@ -13,6 +13,12 @@ describe('PORTFOLIO_TEMPLATES', () => {
 		const ids = PORTFOLIO_TEMPLATES.map((template) => template.id);
 		expect(new Set(ids).size).toBe(ids.length);
 	});
+
+	it('has a non-empty description for every template', () => {
+		for (const template of PORTFOLIO_TEMPLATES) {
+			expect(template.description.length).toBeGreaterThan(0);
+		}
+	});
 });
 
 describe('getTemplate', () => {
