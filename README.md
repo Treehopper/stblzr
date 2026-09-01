@@ -1,6 +1,7 @@
 # stblzr
 
 [![CI](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/Treehopper/stblzr/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ed84902d5a804d179586fc43f0ef688a)](https://app.codacy.com/gh/Treehopper/stblzr/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 A simple ETF portfolio rebalancer for savings plans. Pick a target allocation template (50/30/20 or 70/30), enter your current holdings, and get the minimal set of buy/sell actions needed to rebalance. Built as a Svelte + TypeScript PWA, aimed at mobile browsers (Safari on iOS, Chrome on Android).
 
