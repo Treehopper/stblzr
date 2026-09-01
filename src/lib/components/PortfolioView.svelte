@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AppScreen from '$lib/components/AppScreen.svelte';
 	import HoldingsRow from '$lib/components/HoldingsRow.svelte';
 	import PieChart from '$lib/components/PieChart.svelte';
 	import { formatCurrency } from '$lib/currency';
@@ -28,60 +29,55 @@
 	}
 </script>
 
-<div class="portfolio">
-	<h1>Your portfolio</h1>
+<AppScreen title="Your portfolio">
+	<div class="portfolio">
+		{#if template}
+			<p class="template-label">{template.label}</p>
 
-	{#if template}
-		<p class="template-label">{template.label}</p>
+			<PieChart parts={template.parts} holdings={portfolioHoldings.all} />
 
-		<PieChart parts={template.parts} holdings={portfolioHoldings.all} />
+			<section>
+				<h2>Current holdings</h2>
+				{#key holdingsVersion}
+					{#each template.parts as part (part.key)}
+						<HoldingsRow {part} />
+					{/each}
+				{/key}
+			</section>
 
-		<section>
-			<h2>Current holdings</h2>
-			{#key holdingsVersion}
-				{#each template.parts as part (part.key)}
-					<HoldingsRow {part} />
-				{/each}
-			{/key}
-		</section>
+			<section>
+				<h2>Rebalance</h2>
+				<button type="button" onclick={() => (showBuyPlan = true)}>Buy only</button>
 
-		<section>
-			<h2>Rebalance</h2>
-			<button type="button" onclick={() => (showBuyPlan = true)}>Buy only</button>
-
-			{#if showBuyPlan}
-				{#if buyActions.length > 0}
-					<ul class="actions">
-						{#each buyActions as action (action.partKey)}
-							<li>
-								Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
-							</li>
-						{/each}
-					</ul>
-					<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
-				{:else}
-					<p class="balanced">Already balanced — nothing to buy.</p>
+				{#if showBuyPlan}
+					{#if buyActions.length > 0}
+						<ul class="actions">
+							{#each buyActions as action (action.partKey)}
+								<li>
+									Buy {formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
+								</li>
+							{/each}
+						</ul>
+						<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
+					{:else}
+						<p class="balanced">Already balanced — nothing to buy.</p>
+					{/if}
 				{/if}
-			{/if}
-		</section>
-	{/if}
-</div>
+			</section>
+		{/if}
+	</div>
+</AppScreen>
 
 <style>
 	.portfolio {
 		max-width: 28rem;
 		margin: 0 auto;
-		padding: calc(1.5rem + env(safe-area-inset-top)) 1rem 1.5rem;
+		padding: 1.5rem 1rem;
 		font-family:
 			system-ui,
 			-apple-system,
 			sans-serif;
 		color: #0f172a;
-	}
-
-	h1 {
-		font-size: 1.375rem;
-		margin: 0 0 0.25rem;
 	}
 
 	h2 {

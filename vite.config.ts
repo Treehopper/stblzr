@@ -25,7 +25,7 @@ export default defineConfig({
 				name: 'stblzr',
 				short_name: 'stblzr',
 				description: 'ETF portfolio rebalancer for savings plans',
-				theme_color: '#0f172a',
+				theme_color: '#2563eb',
 				background_color: '#0f172a',
 				display: 'standalone',
 				start_url: `${base}/`,
