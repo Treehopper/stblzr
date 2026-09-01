@@ -59,5 +59,13 @@
 		border-radius: 0.5rem;
 		font: inherit;
 		text-align: right;
+		appearance: textfield;
+		-moz-appearance: textfield;
+	}
+
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
 	}
 </style>
