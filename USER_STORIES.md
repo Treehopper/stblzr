@@ -9,7 +9,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **US-1**: As a first-time user, I can choose a portfolio template (50/30/20 or 70/30) so the app knows my target allocation.
 - [x] **US-2**: As a user, my chosen template is saved persistently (offline-capable, survives app restarts) so I don't have to re-select it every visit.
 - [x] **US-3**: As a returning user with a saved template, I skip onboarding and go straight to my portfolio view.
-- [ ] **US-13**: As a user, I can give each part of my split a name of my own choosing, saved persistently, so I still recognize what each allocation represents even after not checking my portfolio for a long time.
+- [x] **US-13**: As a user, I can give each part of my split a name of my own choosing, saved persistently, so I still recognize what each allocation represents even after not checking my portfolio for a long time.
 - [x] **US-14**: As a user, I can choose my currency (Euro or US Dollar) on the onboarding screen, saved persistently, with Euro as the default, so my amounts are shown in the currency I actually use.
 - [x] **US-16**: As a user, I see a short description of each portfolio template on the selection screen explaining its rationale (e.g. why 50/30/20 splits allocations the way it does), so I can pick the template that matches my investing philosophy.
 

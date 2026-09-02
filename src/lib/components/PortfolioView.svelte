@@ -7,9 +7,15 @@
 	import { buyOnlyActions, sellAndRebuyMinimalActions } from '$lib/rebalance';
 	import { currencySelection } from '$lib/state/currency.svelte';
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
+	import { partNames } from '$lib/state/part-names.svelte';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
 
 	const template = $derived(templateSelection.id ? getTemplate(templateSelection.id) : undefined);
+	// Rebalance actions carry the template's default part label; resolve the
+	// user's custom name (if any) by part key instead of trusting it verbatim.
+	const partLabelByKey = $derived(
+		new Map(template?.parts.map((part) => [part.key, partNames.nameFor(part)]) ?? [])
+	);
 	const buyActions = $derived(template ? buyOnlyActions(template, portfolioHoldings.all) : []);
 	// Sells listed above buys within the sell-and-rebuy plan.
 	const sellAndRebuyActions = $derived(
@@ -92,7 +98,7 @@
 							<li>
 								<span class="action-label"
 									>{action.type === 'buy' ? 'Buy' : 'Sell'}
-									{action.partLabel}</span
+									{partLabelByKey.get(action.partKey) ?? action.partLabel}</span
 								>
 								<span class="action-amount"
 									>{formatCurrency(action.amount, currencySelection.id)}</span
