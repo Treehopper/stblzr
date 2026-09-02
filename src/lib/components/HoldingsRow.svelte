@@ -70,6 +70,7 @@
 		border-radius: 0.5rem;
 		font: inherit;
 		text-align: right;
+		font-variant-numeric: tabular-nums;
 		appearance: textfield;
 		-webkit-appearance: textfield;
 		-moz-appearance: textfield;
