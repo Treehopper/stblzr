@@ -31,6 +31,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **US-10**: As a user, for each rebalancing option (buy-only or sell-and-rebuy minimal), I get a detailed list of actions to take, each with the ETF/stock and the currency amount to buy or sell.
 - [x] **US-11**: As a user, I see a small warning indicator next to the "sell-and-rebuy minimal" option noting that selling may trigger taxes, so I'm not caught off guard before choosing it.
 - [x] **US-12**: As a user, after confirming the rebalancing option I picked, the pie chart updates to reflect the new balanced state and shows the new per-part amounts, and these updated holdings are saved persistently so they're there next time I open the app.
+- [x] **US-16**: As a user, I pick one rebalancing option at a time via side-by-side buttons and act on it with a single Apply button, rather than seeing both options with their own Apply buttons at once; within the sell-and-rebuy plan, sells are listed above buys.
 
 ## Backlog / not yet scoped
 
