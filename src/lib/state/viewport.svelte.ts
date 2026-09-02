@@ -10,18 +10,27 @@ function readHeight(): number {
 	return window.visualViewport?.height ?? window.innerHeight;
 }
 
+// iOS also tries to "reveal" the focused input by panning the visual viewport down and
+// away from the top of the (fixed-position, non-scrollable) page, rather than scrolling
+// the document. A `position: fixed` app shell stays pinned to the *layout* viewport, so
+// without correcting for this it visibly slides out from under the visible area. Tracking
+// this lets the app shell follow the pan instead of fighting it.
+function readOffsetTop(): number {
+	if (!browser) return 0;
+	return window.visualViewport?.offsetTop ?? 0;
+}
+
 let height = $state(readHeight());
+let offsetTop = $state(readOffsetTop());
 
 if (browser) {
-	// iOS also tries to scroll the page to "reveal" the focused input instead of just
-	// shrinking the visible area. That scroll happens immediately as focus moves, so it
-	// has to be undone on every single event, not just once things settle down - a
-	// debounced correction still lets the native scroll flash on screen for however long
-	// the debounce window is, no matter how short it's set.
-	const pinScroll = () => window.scrollTo(0, 0);
-	window.visualViewport?.addEventListener('resize', pinScroll);
-	window.visualViewport?.addEventListener('scroll', pinScroll);
-	window.addEventListener('scroll', pinScroll);
+	// The pan (offsetTop) has to track every event immediately - any lag makes the app
+	// shell visibly lag behind the native pan for a frame or two, which reads as a jump.
+	const syncOffsetTop = () => {
+		offsetTop = readOffsetTop();
+	};
+	window.visualViewport?.addEventListener('resize', syncOffsetTop);
+	window.visualViewport?.addEventListener('scroll', syncOffsetTop);
 
 	// Moving focus from one input to another makes iOS briefly report the keyboard as
 	// closing (old field blurs) and then reopening (new field focuses), firing extra
@@ -31,19 +40,22 @@ if (browser) {
 	// enough to still feel instant for a real keyboard open/close, long enough to swallow
 	// the in-between blip from switching fields.
 	let debounce: ReturnType<typeof setTimeout> | undefined;
-	const sync = () => {
+	const syncHeight = () => {
 		clearTimeout(debounce);
 		debounce = setTimeout(() => {
 			height = readHeight();
 		}, 100);
 	};
-	window.visualViewport?.addEventListener('resize', sync);
-	window.visualViewport?.addEventListener('scroll', sync);
-	window.addEventListener('resize', sync);
+	window.visualViewport?.addEventListener('resize', syncHeight);
+	window.visualViewport?.addEventListener('scroll', syncHeight);
+	window.addEventListener('resize', syncHeight);
 }
 
 export const viewportSize = {
 	get height() {
 		return height;
+	},
+	get offsetTop() {
+		return offsetTop;
 	}
 };

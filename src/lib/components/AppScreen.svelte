@@ -7,7 +7,7 @@
 		$props();
 </script>
 
-<div class="screen" style:height="{viewportSize.height}px">
+<div class="screen" style:top="{viewportSize.offsetTop}px" style:height="{viewportSize.height}px">
 	<AppHeader {title} {subtitle} />
 	<div class="scroll-area">
 		{@render children()}
@@ -16,6 +16,10 @@
 
 <style>
 	.screen {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
 		height: 100dvh;
 		display: flex;
 		flex-direction: column;
