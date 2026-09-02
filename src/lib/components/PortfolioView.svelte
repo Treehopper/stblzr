@@ -95,7 +95,9 @@
 							</li>
 						{/each}
 					</ul>
-					<button type="button" class="apply" onclick={() => applyPlan(activeActions)}>Apply</button>
+					<button type="button" class="apply" onclick={() => applyPlan(activeActions)}>
+						Apply
+					</button>
 				{:else}
 					<p class="balanced">{activePlanLabel}</p>
 				{/if}
