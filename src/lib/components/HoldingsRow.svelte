@@ -22,7 +22,18 @@
 	<span class="name">{part.label}</span>
 	<span class="input-group">
 		<span class="currency-symbol">{currencySymbol}</span>
-		<input type="number" inputmode="decimal" min="0" step="0.01" bind:value oninput={handleInput} />
+		<!-- Without this, some browsers restore this field's value from before a page reload
+		     directly on the DOM node, silently out of sync with the (correctly reloaded)
+		     `value` above, since that restore never fires an input/change event. -->
+		<input
+			type="number"
+			inputmode="decimal"
+			min="0"
+			step="0.01"
+			autocomplete="off"
+			bind:value
+			oninput={handleInput}
+		/>
 	</span>
 </label>
 
