@@ -13,12 +13,23 @@ function readHeight(): number {
 let height = $state(readHeight());
 
 if (browser) {
+	// Moving focus from one input to another makes iOS briefly report the keyboard as
+	// closing (old field blurs) and then reopening (new field focuses), firing extra
+	// resize/scroll events with a transient, momentarily-taller height in between. Applying
+	// every event as it arrives made the layout visibly jump for that brief moment, so the
+	// height is only committed once events stop arriving for a short debounce window -
+	// short enough to still feel instant for a real keyboard open/close, long enough to
+	// swallow the in-between blip from switching fields.
+	let debounce: ReturnType<typeof setTimeout> | undefined;
 	const sync = () => {
-		height = readHeight();
-		// iOS also tries to scroll the page to "reveal" the focused input instead of
-		// just shrinking the visible area - keep it pinned since our layout already
-		// accounts for the smaller height.
-		window.scrollTo(0, 0);
+		clearTimeout(debounce);
+		debounce = setTimeout(() => {
+			height = readHeight();
+			// iOS also tries to scroll the page to "reveal" the focused input instead of
+			// just shrinking the visible area - keep it pinned since our layout already
+			// accounts for the smaller height.
+			window.scrollTo(0, 0);
+		}, 100);
 	};
 	window.visualViewport?.addEventListener('resize', sync);
 	window.visualViewport?.addEventListener('scroll', sync);
