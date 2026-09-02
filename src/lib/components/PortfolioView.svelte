@@ -2,9 +2,15 @@
 	import AppScreen from '$lib/components/AppScreen.svelte';
 	import HoldingsRow from '$lib/components/HoldingsRow.svelte';
 	import PieChart from '$lib/components/PieChart.svelte';
-	import { formatCurrency } from '$lib/currency';
+	import { PART_COLORS } from '$lib/colors';
+	import { formatCurrency, formatDate } from '$lib/currency';
 	import { getTemplate } from '$lib/portfolio';
-	import { buyOnlyActions, sellAndRebuyMinimalActions } from '$lib/rebalance';
+	import {
+		buyOnlyActions,
+		maxDeviationPct,
+		REBALANCE_TOLERANCE_PCT,
+		sellAndRebuyMinimalActions
+	} from '$lib/rebalance';
 	import { currencySelection } from '$lib/state/currency.svelte';
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
 	import { partNames } from '$lib/state/part-names.svelte';
@@ -16,6 +22,24 @@
 	const partLabelByKey = $derived(
 		new Map(template?.parts.map((part) => [part.key, partNames.nameFor(part)]) ?? [])
 	);
+	// Same color a part gets in the pie chart legend, so the holdings and rebalance
+	// rows below visually link back to their chart slice.
+	const colorByKey = $derived(
+		new Map(template?.parts.map((part, i) => [part.key, PART_COLORS[i % PART_COLORS.length]]) ?? [])
+	);
+
+	const totalHoldings = $derived(
+		template
+			? template.parts.reduce((sum, part) => sum + portfolioHoldings.amountFor(part.key), 0)
+			: 0
+	);
+
+	const withinTolerance = $derived(
+		template && totalHoldings > 0
+			? maxDeviationPct(template, portfolioHoldings.all) <= REBALANCE_TOLERANCE_PCT
+			: false
+	);
+
 	const buyActions = $derived(template ? buyOnlyActions(template, portfolioHoldings.all) : []);
 	// Sells listed above buys within the sell-and-rebuy plan.
 	const sellAndRebuyActions = $derived(
@@ -28,10 +52,21 @@
 
 	let selectedOption = $state<'buy' | 'sellRebuy'>('buy');
 	const activeActions = $derived(selectedOption === 'buy' ? buyActions : sellAndRebuyActions);
+	// Even when the exact-match math finds a (possibly tiny) trade, a portfolio already
+	// within tolerance shouldn't prompt one.
+	const showActions = $derived(activeActions.length > 0 && !withinTolerance);
 	const activePlanLabel = $derived(
-		selectedOption === 'buy'
-			? 'Already balanced — nothing to buy.'
-			: 'Already balanced — nothing to sell or buy.'
+		withinTolerance
+			? `Within ${REBALANCE_TOLERANCE_PCT}% of target — no action needed.`
+			: selectedOption === 'buy'
+				? 'Already balanced — nothing to buy.'
+				: 'Already balanced — nothing to sell or buy.'
+	);
+	const totalActionAmount = $derived(
+		activeActions.filter((action) => action.type === 'buy').reduce((sum, a) => sum + a.amount, 0)
+	);
+	const applyButtonLabel = $derived(
+		selectedOption === 'buy' ? 'Record as bought' : 'Record as sold & bought'
 	);
 
 	// Bumped after applying a plan so the (locally-buffered) HoldingsRow inputs remount
@@ -59,9 +94,18 @@
 				<h2>Current holdings</h2>
 				{#key holdingsVersion}
 					{#each template.parts as part (part.key)}
-						<HoldingsRow {part} />
+						<HoldingsRow {part} color={colorByKey.get(part.key) ?? PART_COLORS[0]} />
 					{/each}
 				{/key}
+				<div class="total-row">
+					<span>Total</span>
+					<span>{formatCurrency(totalHoldings, currencySelection.id)}</span>
+				</div>
+				{#if portfolioHoldings.lastUpdatedAt}
+					<p class="last-updated">
+						Last updated {formatDate(portfolioHoldings.lastUpdatedAt, currencySelection.id)}
+					</p>
+				{/if}
 			</section>
 
 			<section>
@@ -84,7 +128,7 @@
 						aria-pressed={selectedOption === 'sellRebuy'}
 						onclick={() => (selectedOption = 'sellRebuy')}
 					>
-						Sell and rebuy (minimal)
+						Buy & sell
 					</button>
 				</div>
 
@@ -92,22 +136,30 @@
 					<p class="warning">⚠️ Selling may trigger taxes and other costs.</p>
 				{/if}
 
-				{#if activeActions.length > 0}
+				{#if showActions}
 					<ul class="actions">
 						{#each activeActions as action (action.partKey)}
 							<li>
-								<span class="action-label"
-									>{action.type === 'buy' ? 'Buy' : 'Sell'}
-									{partLabelByKey.get(action.partKey) ?? action.partLabel}</span
-								>
+								<span class="action-label">
+									<span
+										class="swatch"
+										style:background={colorByKey.get(action.partKey) ?? PART_COLORS[0]}
+									></span>
+									{action.type === 'buy' ? 'Buy' : 'Sell'}
+									{partLabelByKey.get(action.partKey) ?? action.partLabel}
+								</span>
 								<span class="action-amount"
 									>{formatCurrency(action.amount, currencySelection.id)}</span
 								>
 							</li>
 						{/each}
 					</ul>
+					<div class="total-row">
+						<span>Total to {selectedOption === 'buy' ? 'invest' : 'move'}</span>
+						<span>{formatCurrency(totalActionAmount, currencySelection.id)}</span>
+					</div>
 					<button type="button" class="apply" onclick={() => applyPlan(activeActions)}>
-						Apply
+						{applyButtonLabel}
 					</button>
 				{:else}
 					<p class="balanced">{activePlanLabel}</p>
@@ -122,10 +174,6 @@
 		max-width: 28rem;
 		margin: 0 auto;
 		padding: 1.5rem 1rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			sans-serif;
 		color: #0f172a;
 	}
 
@@ -141,7 +189,7 @@
 	}
 
 	button {
-		background: #0f172a;
+		background: var(--accent);
 		color: #f8fafc;
 		border: none;
 		border-radius: 0.5rem;
@@ -162,7 +210,7 @@
 	}
 
 	.tab.active {
-		background: #0f172a;
+		background: var(--accent);
 		color: #f8fafc;
 	}
 
@@ -183,9 +231,20 @@
 	}
 
 	.action-label {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.375rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.swatch {
+		flex-shrink: 0;
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 999px;
+		align-self: center;
 	}
 
 	.action-amount {
@@ -194,9 +253,26 @@
 		font-variant-numeric: tabular-nums;
 	}
 
+	.total-row {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 0.5rem;
+		padding-top: 0.5rem;
+		border-top: 1px solid #e2e8f0;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.last-updated {
+		margin: 0.375rem 0 0;
+		font-size: 0.75rem;
+		color: #64748b;
+	}
+
 	.apply {
+		display: block;
+		width: 100%;
 		margin-top: 0.75rem;
-		background: #16a34a;
 	}
 
 	.balanced {

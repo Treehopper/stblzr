@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buyOnlyActions, sellAndRebuyMinimalActions } from './rebalance';
+import { buyOnlyActions, maxDeviationPct, sellAndRebuyMinimalActions } from './rebalance';
 import type { PortfolioTemplate } from './portfolio';
 
 const template: PortfolioTemplate = {
@@ -100,5 +100,25 @@ describe('sellAndRebuyMinimalActions', () => {
 			{ partKey: 'world', partLabel: 'World', type: 'sell', amount: 1 },
 			{ partKey: 'emerging-markets', partLabel: 'Emerging Markets', type: 'buy', amount: 1 }
 		]);
+	});
+});
+
+describe('maxDeviationPct', () => {
+	it('returns 0 for an exactly balanced portfolio', () => {
+		expect(maxDeviationPct(template, { world: 700, 'emerging-markets': 300 })).toBe(0);
+	});
+
+	it('returns 0 when nothing has been entered yet', () => {
+		expect(maxDeviationPct(template, {})).toBe(0);
+	});
+
+	it('returns the largest gap between actual and target share', () => {
+		// world: 80% actual vs 70% target (+10), EM: 20% actual vs 30% target (-10)
+		expect(maxDeviationPct(template, { world: 800, 'emerging-markets': 200 })).toBeCloseTo(10);
+	});
+
+	it('treats a missing part as zero holdings', () => {
+		// world: 100% actual vs 70% target (+30), EM: 0% actual vs 30% target (-30)
+		expect(maxDeviationPct(template, { world: 700 })).toBeCloseTo(30);
 	});
 });

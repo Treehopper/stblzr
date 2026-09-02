@@ -7,6 +7,31 @@ export interface RebalanceAction {
 	amount: number;
 }
 
+// Below this drift, the portfolio is "close enough" - showing a plan for a fraction of
+// a percent of drift generates noise trades rather than a real rebalance.
+export const REBALANCE_TOLERANCE_PCT = 5;
+
+/**
+ * Largest gap, in percentage points, between any part's actual share of the portfolio
+ * and its target share. Used to decide whether the portfolio is close enough to target
+ * that no action needs to be shown at all, even if the exact-match math would produce
+ * (tiny) trades. Returns 0 when nothing has been entered yet.
+ */
+export function maxDeviationPct(
+	template: PortfolioTemplate,
+	holdings: Record<string, number>
+): number {
+	const total = template.parts.reduce((sum, part) => sum + (holdings[part.key] ?? 0), 0);
+	if (total <= 0) return 0;
+
+	return Math.max(
+		...template.parts.map((part) => {
+			const currentPct = ((holdings[part.key] ?? 0) / total) * 100;
+			return Math.abs(currentPct - part.targetPct);
+		})
+	);
+}
+
 // Amounts are never shown with cents, so any calculated buy/sell amount is
 // rounded up to the next whole currency unit - rounding down would leave the
 // portfolio slightly off target after applying the plan. `value` is first

@@ -86,10 +86,6 @@
 		max-width: 28rem;
 		margin: 0 auto;
 		padding: 1.5rem 1rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			sans-serif;
 		color: #0f172a;
 	}
 
@@ -133,7 +129,7 @@
 	}
 
 	.currency-option.selected {
-		border-color: #0f172a;
+		border-color: var(--accent);
 		background: #f1f5f9;
 	}
 
@@ -162,7 +158,7 @@
 	}
 
 	.template.selected {
-		border-color: #0f172a;
+		border-color: var(--accent);
 		background: #f1f5f9;
 	}
 
