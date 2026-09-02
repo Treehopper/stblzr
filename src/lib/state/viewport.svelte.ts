@@ -34,17 +34,24 @@ if (browser) {
 
 	// Moving focus from one input to another makes iOS briefly report the keyboard as
 	// closing (old field blurs) and then reopening (new field focuses), firing extra
-	// resize events with a transient, momentarily-taller height in between. Applying every
-	// event as it arrives made the layout visibly jump for that brief moment, so the height
-	// is only committed once events stop arriving for a short debounce window - short
-	// enough to still feel instant for a real keyboard open/close, long enough to swallow
-	// the in-between blip from switching fields.
+	// resize events with a transient, momentarily-taller height in between. Debouncing
+	// every change to swallow that blip meant the height also lagged behind on a real
+	// shrink (keyboard first opening, or tabbing further down while it stays open) -
+	// each field visited before the debounce settled stayed misaligned, which is why the
+	// jump only went away once you stopped moving for a beat. A shrink is never the
+	// blip (the blip only ever reads taller), so only debounce growth; apply shrinks the
+	// instant they arrive.
 	let debounce: ReturnType<typeof setTimeout> | undefined;
 	const syncHeight = () => {
 		clearTimeout(debounce);
-		debounce = setTimeout(() => {
-			height = readHeight();
-		}, 100);
+		const next = readHeight();
+		if (next <= height) {
+			height = next;
+		} else {
+			debounce = setTimeout(() => {
+				height = readHeight();
+			}, 100);
+		}
 	};
 	window.visualViewport?.addEventListener('resize', syncHeight);
 	window.visualViewport?.addEventListener('scroll', syncHeight);
