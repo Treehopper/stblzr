@@ -54,12 +54,7 @@
 </script>
 
 <div class="chart" style:display={barsOnly ? 'none' : undefined}>
-	<svg
-		viewBox="0 0 112 112"
-		class="pie"
-		role="img"
-		aria-label="Portfolio allocation"
-	>
+	<svg viewBox="0 0 112 112" class="pie" role="img" aria-label="Portfolio allocation">
 		{#each targetSlices as slice, i (slice.key)}
 			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
 		{/each}
