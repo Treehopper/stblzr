@@ -20,7 +20,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 ## Current holdings input
 
 - [x] **US-5**: As a user, I can enter the current currency amount I hold in each ETF/stock of my portfolio.
-- [x] **US-15**: As a user, all currency amounts I see are shown with the correct currency symbol and locale-appropriate separators (e.g. `1.234,56 €` for Euro, `$1,234.56` for US Dollar) based on my chosen currency.
+- [x] **US-15**: As a user, all currency amounts I see are shown with the correct currency symbol and locale-appropriate separators (e.g. `1.234 €` for Euro, `$1,234` for US Dollar) based on my chosen currency, and never with cent values.
 - [x] **US-6**: As a user, my entered holdings are saved persistently so I don't have to re-enter them every visit.
 - [x] **US-7**: As a user, once I've entered my holdings, I see an overlay on the pie chart with colored indicators showing which parts of my portfolio are over-weight and which are under-weight relative to target.
 
@@ -32,6 +32,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **US-11**: As a user, I see a small warning indicator next to the "sell-and-rebuy minimal" option noting that selling may trigger taxes, so I'm not caught off guard before choosing it.
 - [x] **US-12**: As a user, after confirming the rebalancing option I picked, the pie chart updates to reflect the new balanced state and shows the new per-part amounts, and these updated holdings are saved persistently so they're there next time I open the app.
 - [x] **US-16**: As a user, I pick one rebalancing option at a time via side-by-side buttons and act on it with a single Apply button, rather than seeing both options with their own Apply buttons at once; within the sell-and-rebuy plan, sells are listed above buys.
+- [x] **US-17**: As a user, buy and sell amounts in a rebalancing plan are always whole currency units - if the exact target math would need cents, the amount is rounded up so applying the plan never leaves me short of target.
 
 ## Backlog / not yet scoped
 

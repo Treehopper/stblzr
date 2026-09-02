@@ -7,8 +7,13 @@ export interface RebalanceAction {
 	amount: number;
 }
 
-function roundCurrency(value: number): number {
-	return Math.round(value * 100) / 100;
+// Amounts are never shown with cents, so any calculated buy/sell amount is
+// rounded up to the next whole currency unit - rounding down would leave the
+// portfolio slightly off target after applying the plan. `value` is first
+// rounded to cent precision to absorb floating-point noise (e.g. 199.99999999997)
+// before the ceiling is applied, so noise never pushes a whole number up by one.
+function roundUpToWholeCurrency(value: number): number {
+	return Math.ceil(Math.round(value * 100) / 100);
 }
 
 /**
@@ -37,7 +42,7 @@ export function buyOnlyActions(
 				partKey: part.key,
 				partLabel: part.label,
 				type: 'buy' as const,
-				amount: Math.max(0, roundCurrency(targetAmount - current))
+				amount: Math.max(0, roundUpToWholeCurrency(targetAmount - current))
 			};
 		})
 		.filter((action) => action.amount > 0);
@@ -62,12 +67,12 @@ export function sellAndRebuyMinimalActions(
 		.map((part) => {
 			const current = holdings[part.key] ?? 0;
 			const targetAmount = (part.targetPct / 100) * total;
-			const diff = roundCurrency(targetAmount - current);
+			const diff = targetAmount - current;
 			return {
 				partKey: part.key,
 				partLabel: part.label,
 				type: diff >= 0 ? ('buy' as const) : ('sell' as const),
-				amount: Math.abs(diff)
+				amount: roundUpToWholeCurrency(Math.abs(diff))
 			};
 		})
 		.filter((action) => action.amount > 0);
