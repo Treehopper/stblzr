@@ -22,7 +22,12 @@ function formatterFor(currencyId: CurrencyId): Intl.NumberFormat {
 	let formatter = formatters.get(currencyId);
 	if (!formatter) {
 		const option = getCurrencyOption(currencyId);
-		formatter = new Intl.NumberFormat(option.locale, { style: 'currency', currency: option.id });
+		formatter = new Intl.NumberFormat(option.locale, {
+			style: 'currency',
+			currency: option.id,
+			minimumFractionDigits: 0,
+			maximumFractionDigits: 0
+		});
 		formatters.set(currencyId, formatter);
 	}
 	return formatter;

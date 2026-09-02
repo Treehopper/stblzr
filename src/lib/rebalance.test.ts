@@ -41,6 +41,14 @@ describe('buyOnlyActions', () => {
 			{ partKey: 'emerging-markets', partLabel: 'Emerging Markets', type: 'buy', amount: 300 }
 		]);
 	});
+
+	it('rounds a fractional buy amount up to the next whole currency unit', () => {
+		const actions = buyOnlyActions(template, { world: 1, 'emerging-markets': 0 });
+
+		expect(actions).toEqual([
+			{ partKey: 'emerging-markets', partLabel: 'Emerging Markets', type: 'buy', amount: 1 }
+		]);
+	});
 });
 
 describe('sellAndRebuyMinimalActions', () => {
@@ -82,6 +90,15 @@ describe('sellAndRebuyMinimalActions', () => {
 		expect(actions).toEqual([
 			{ partKey: 'world', partLabel: 'World', type: 'sell', amount: 210 },
 			{ partKey: 'emerging-markets', partLabel: 'Emerging Markets', type: 'buy', amount: 210 }
+		]);
+	});
+
+	it('rounds fractional sell and buy amounts up to the next whole currency unit', () => {
+		const actions = sellAndRebuyMinimalActions(template, { world: 1, 'emerging-markets': 0 });
+
+		expect(actions).toEqual([
+			{ partKey: 'world', partLabel: 'World', type: 'sell', amount: 1 },
+			{ partKey: 'emerging-markets', partLabel: 'Emerging Markets', type: 'buy', amount: 1 }
 		]);
 	});
 });
