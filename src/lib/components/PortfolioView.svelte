@@ -90,8 +90,13 @@
 					<ul class="actions">
 						{#each activeActions as action (action.partKey)}
 							<li>
-								{action.type === 'buy' ? 'Buy' : 'Sell'}
-								{formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
+								<span class="action-label"
+									>{action.type === 'buy' ? 'Buy' : 'Sell'}
+									{action.partLabel}</span
+								>
+								<span class="action-amount"
+									>{formatCurrency(action.amount, currencySelection.id)}</span
+								>
 							</li>
 						{/each}
 					</ul>
@@ -162,6 +167,25 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.375rem;
+	}
+
+	.actions li {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.75rem;
+	}
+
+	.action-label {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.action-amount {
+		flex-shrink: 0;
+		text-align: right;
+		font-variant-numeric: tabular-nums;
 	}
 
 	.apply {
