@@ -4,23 +4,27 @@
 	import PieChart from '$lib/components/PieChart.svelte';
 	import { formatCurrency } from '$lib/currency';
 	import { getTemplate } from '$lib/portfolio';
-	import { buyOnlyActions } from '$lib/rebalance';
+	import { buyOnlyActions, sellAndRebuyMinimalActions } from '$lib/rebalance';
 	import { currencySelection } from '$lib/state/currency.svelte';
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
 
 	const template = $derived(templateSelection.id ? getTemplate(templateSelection.id) : undefined);
 	const buyActions = $derived(template ? buyOnlyActions(template, portfolioHoldings.all) : []);
+	const sellAndRebuyActions = $derived(
+		template ? sellAndRebuyMinimalActions(template, portfolioHoldings.all) : []
+	);
 
 	// Bumped after applying a plan so the (locally-buffered) HoldingsRow inputs remount
 	// and pick up the new stored amounts instead of showing stale, pre-apply values.
 	let holdingsVersion = $state(0);
 
-	function applyBuyPlan() {
-		for (const action of buyActions) {
+	function applyPlan(actions: { partKey: string; type: 'buy' | 'sell'; amount: number }[]) {
+		for (const action of actions) {
+			const current = portfolioHoldings.amountFor(action.partKey);
 			portfolioHoldings.setAmount(
 				action.partKey,
-				portfolioHoldings.amountFor(action.partKey) + action.amount
+				action.type === 'buy' ? current + action.amount : current - action.amount
 			);
 		}
 		holdingsVersion += 1;
@@ -53,9 +57,28 @@
 							</li>
 						{/each}
 					</ul>
-					<button type="button" class="apply" onclick={applyBuyPlan}>Apply</button>
+					<button type="button" class="apply" onclick={() => applyPlan(buyActions)}>Apply</button>
 				{:else}
 					<p class="balanced">Already balanced — nothing to buy.</p>
+				{/if}
+
+				<h3>Sell and rebuy (minimal)</h3>
+				<p class="warning">⚠️ Selling may trigger taxes and other costs.</p>
+
+				{#if sellAndRebuyActions.length > 0}
+					<ul class="actions">
+						{#each sellAndRebuyActions as action (action.partKey)}
+							<li>
+								{action.type === 'buy' ? 'Buy' : 'Sell'}
+								{formatCurrency(action.amount, currencySelection.id)} of {action.partLabel}
+							</li>
+						{/each}
+					</ul>
+					<button type="button" class="apply" onclick={() => applyPlan(sellAndRebuyActions)}>
+						Apply
+					</button>
+				{:else}
+					<p class="balanced">Already balanced — nothing to sell or buy.</p>
 				{/if}
 			</section>
 		{/if}
@@ -84,6 +107,17 @@
 		font-weight: 600;
 		color: #475569;
 		margin: 0 0 0.5rem;
+	}
+
+	.actions + h3,
+	.balanced + h3 {
+		margin-top: 1.5rem;
+	}
+
+	.warning {
+		margin: 0 0 0.5rem;
+		font-size: 0.8125rem;
+		color: #b45309;
 	}
 
 	button {
