@@ -46,23 +46,15 @@
 			: []
 	);
 
-	// Vertical space gets tight when the on-screen keyboard opens on a phone. Squash the
-	// circle into an ellipse first to save height, then drop to horizontal bars once an
-	// ellipse would end up too flat to read. Driven by the live visual-viewport height
-	// (not a `@media (max-height)` query) since Safari never shrinks the CSS viewport
-	// for the keyboard.
-	const squashed = $derived(viewportSize.height <= 700);
+	// Vertical space gets tight when the on-screen keyboard opens on a phone. Drop to
+	// horizontal bars once there's too little height for the pie chart. Driven by the
+	// live visual-viewport height (not a `@media (max-height)` query) since Safari never
+	// shrinks the CSS viewport for the keyboard.
 	const barsOnly = $derived(viewportSize.height <= 480);
 </script>
 
-<div class="chart" class:squashed style:display={barsOnly ? 'none' : undefined}>
-	<svg
-		viewBox="0 0 112 112"
-		preserveAspectRatio="none"
-		class="pie"
-		role="img"
-		aria-label="Portfolio allocation"
-	>
+<div class="chart" style:display={barsOnly ? 'none' : undefined}>
+	<svg viewBox="0 0 112 112" class="pie" role="img" aria-label="Portfolio allocation">
 		{#each targetSlices as slice, i (slice.key)}
 			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
 		{/each}
@@ -162,9 +154,5 @@
 		margin: 0;
 		font-size: 0.75rem;
 		color: #64748b;
-	}
-
-	.chart.squashed {
-		aspect-ratio: 2.6 / 1;
 	}
 </style>
