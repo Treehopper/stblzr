@@ -36,6 +36,10 @@
 	.scroll-area {
 		flex: 1;
 		overflow-y: auto;
+		/* iOS also scrolls the nearest scrollable ancestor of a focused field to reveal
+		   it - this container - abruptly and independently of the outer .screen
+		   repositioning above. Without this it still snaps even once that's smoothed. */
+		scroll-behavior: smooth;
 		-webkit-mask-image: linear-gradient(to bottom, transparent, black 1.5rem);
 		mask-image: linear-gradient(to bottom, transparent, black 1.5rem);
 	}
