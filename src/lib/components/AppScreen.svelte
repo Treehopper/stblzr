@@ -23,6 +23,14 @@
 		height: 100dvh;
 		display: flex;
 		flex-direction: column;
+		/* The very first keyboard-open can also collapse Safari's own address/tab bar,
+		   which resizes the layout viewport at the same time our JS is reacting to the
+		   visual-viewport pan - two animations racing each other looks like a jump no
+		   matter how quickly the JS catches up. Transitioning these two properties turns
+		   any such catch-up into a slide instead of a snap. */
+		transition:
+			top 0.2s ease-out,
+			height 0.2s ease-out;
 	}
 
 	.scroll-area {
