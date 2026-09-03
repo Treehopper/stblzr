@@ -12,6 +12,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **US-13**: As a user, I can give each part of my split a name of my own choosing, saved persistently, so I still recognize what each allocation represents even after not checking my portfolio for a long time.
 - [x] **US-14**: As a user, I can choose my currency (Euro or US Dollar) on the onboarding screen, saved persistently, with Euro as the default, so my amounts are shown in the currency I actually use.
 - [x] **US-16**: As a user, I see a short description of each portfolio template on the selection screen explaining its rationale (e.g. why 50/30/20 splits allocations the way it does), so I can pick the template that matches my investing philosophy.
+- [x] **US-23**: As a user, I can open a menu from the header and choose a color scheme (light or dark) from a set of named options, saved persistently, so I can pick an appearance that suits my taste and lighting.
 
 ## Target allocation view
 

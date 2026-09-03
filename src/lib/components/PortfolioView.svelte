@@ -70,7 +70,7 @@
 	}
 </script>
 
-<AppScreen title="Your portfolio" subtitle={template?.label}>
+<AppScreen title="Your portfolio">
 	<div class="portfolio">
 		{#if template}
 			<PieChart parts={template.parts} holdings={portfolioHoldings.all} />
@@ -159,7 +159,7 @@
 		max-width: 28rem;
 		margin: 0 auto;
 		padding: 1.5rem 1rem;
-		color: #0f172a;
+		color: var(--text);
 	}
 
 	h2 {
@@ -170,12 +170,12 @@
 	.warning {
 		margin: 0.75rem 0 0.5rem;
 		font-size: 0.8125rem;
-		color: #b45309;
+		color: var(--warning);
 	}
 
 	button {
 		background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
-		color: #f8fafc;
+		color: var(--header-text, #f8fafc);
 		border: none;
 		border-radius: 0.5rem;
 		padding: 0.5rem 1rem;
@@ -207,8 +207,8 @@
 
 	.tab {
 		flex: 1;
-		background: #e2e8f0;
-		color: #334155;
+		background: var(--surface-alt);
+		color: var(--text-muted);
 		box-shadow:
 			inset 0 1px 2px rgb(15 23 42 / 8%),
 			0 1px 0 rgb(255 255 255 / 60%);
@@ -216,7 +216,7 @@
 
 	.tab.active {
 		background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
-		color: #f8fafc;
+		color: var(--header-text, #f8fafc);
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 20%),
 			0 1px 2px rgb(15 23 42 / 25%);
@@ -266,7 +266,7 @@
 		justify-content: space-between;
 		margin-top: 0.5rem;
 		padding-top: 0.5rem;
-		border-top: 1px solid #e2e8f0;
+		border-top: 1px solid var(--border);
 		font-weight: 600;
 		font-variant-numeric: tabular-nums;
 	}
@@ -274,7 +274,7 @@
 	.last-updated {
 		margin: 0.375rem 0 0;
 		font-size: 0.75rem;
-		color: #64748b;
+		color: var(--text-muted);
 	}
 
 	.apply {
@@ -285,6 +285,6 @@
 
 	.balanced {
 		margin: 0.75rem 0 0;
-		color: #475569;
+		color: var(--text-muted);
 	}
 </style>

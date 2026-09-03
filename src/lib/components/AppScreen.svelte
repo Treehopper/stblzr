@@ -3,12 +3,11 @@
 	import { viewportSize } from '$lib/state/viewport.svelte';
 	import type { Snippet } from 'svelte';
 
-	let { title, subtitle, children }: { title: string; subtitle?: string; children: Snippet } =
-		$props();
+	let { title, children }: { title: string; children: Snippet } = $props();
 </script>
 
 <div class="screen" style:top="{viewportSize.offsetTop}px" style:height="{viewportSize.height}px">
-	<AppHeader {title} {subtitle} />
+	<AppHeader {title} />
 	<div class="scroll-area">
 		{@render children()}
 	</div>

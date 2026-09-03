@@ -178,18 +178,18 @@
 	}
 
 	.track {
-		fill: #e2e8f0;
+		fill: var(--surface-alt);
 	}
 
 	.label-line {
-		stroke: #94a3b8;
+		stroke: var(--border-strong);
 		stroke-width: 1;
 	}
 
 	.label-text {
 		font-size: 9px;
 		font-weight: 600;
-		fill: #0f172a;
+		fill: var(--text);
 	}
 
 	.actual-label-text {
@@ -207,7 +207,7 @@
 		margin: 0 auto;
 		text-align: center;
 		font-size: 0.8125rem;
-		color: #64748b;
+		color: var(--text-muted);
 		pointer-events: none;
 	}
 
@@ -224,7 +224,7 @@
 		height: 0.625rem;
 		border-radius: 999px;
 		overflow: hidden;
-		background: #e2e8f0;
+		background: var(--surface-alt);
 	}
 
 	.actual-bar {
@@ -238,6 +238,6 @@
 	.bar-empty {
 		margin: 0;
 		font-size: 0.75rem;
-		color: #64748b;
+		color: var(--text-muted);
 	}
 </style>
