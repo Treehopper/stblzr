@@ -86,10 +86,6 @@
 		max-width: 28rem;
 		margin: 0 auto;
 		padding: 1.5rem 1rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			sans-serif;
 		color: #0f172a;
 	}
 
@@ -130,11 +126,13 @@
 		cursor: pointer;
 		font: inherit;
 		color: inherit;
+		box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
 	}
 
 	.currency-option.selected {
-		border-color: #0f172a;
+		border-color: var(--accent);
 		background: #f1f5f9;
+		box-shadow: 0 1px 3px rgb(37 99 235 / 25%);
 	}
 
 	.templates {
@@ -159,11 +157,13 @@
 		gap: 0.5rem;
 		font: inherit;
 		color: inherit;
+		box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
 	}
 
 	.template.selected {
-		border-color: #0f172a;
+		border-color: var(--accent);
 		background: #f1f5f9;
+		box-shadow: 0 1px 3px rgb(37 99 235 / 25%);
 	}
 
 	.label {

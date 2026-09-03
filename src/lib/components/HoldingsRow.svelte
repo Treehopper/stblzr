@@ -1,21 +1,50 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { getCurrencyOption } from '$lib/currency';
+	import { formatAmount, getCurrencyOption, parseAmountInput } from '$lib/currency';
 	import type { PortfolioPart } from '$lib/portfolio';
 	import { currencySelection } from '$lib/state/currency.svelte';
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
 	import { partNames } from '$lib/state/part-names.svelte';
 
-	let { part }: { part: PortfolioPart } = $props();
+	let { part, color }: { part: PortfolioPart; color: string } = $props();
 
 	// A fresh component instance is created per part (keyed #each), so `part` never
 	// changes after mount - only the initial stored amount should seed the input.
-	let value = $state(untrack(() => portfolioHoldings.amountFor(part.key)) || undefined);
+	let value = $state(untrack(() => portfolioHoldings.amountFor(part.key)));
+
+	// The displayed text: raw digits while focused (so typing isn't fought by grouping
+	// separators moving under the cursor), grouped/formatted once the field is blurred.
+	let text = $state(
+		value
+			? formatAmount(
+					value,
+					untrack(() => currencySelection.id)
+				)
+			: ''
+	);
+	let focused = $state(false);
+
+	$effect(() => {
+		if (!focused) {
+			text = value ? formatAmount(value, currencySelection.id) : '';
+		}
+	});
 
 	const currencySymbol = $derived(getCurrencyOption(currencySelection.id).symbol);
 
-	function handleInput() {
-		portfolioHoldings.setAmount(part.key, Number.isFinite(value) ? (value as number) : 0);
+	function handleFocus() {
+		focused = true;
+		text = value ? String(value) : '';
+	}
+
+	function handleInput(event: Event) {
+		text = (event.currentTarget as HTMLInputElement).value;
+		value = parseAmountInput(text);
+		portfolioHoldings.setAmount(part.key, value);
+	}
+
+	function handleBlur() {
+		focused = false;
 	}
 
 	let editingName = $state(false);
@@ -43,6 +72,7 @@
 </script>
 
 <div class="row">
+	<span class="swatch" style:background={color}></span>
 	{#if editingName}
 		<input
 			class="name-input"
@@ -55,23 +85,23 @@
 			autofocus
 		/>
 	{:else}
-		<button type="button" class="name" onclick={startEditingName}>
-			{partNames.nameFor(part)}
-		</button>
+		<button type="button" class="name" onclick={startEditingName}>{partNames.nameFor(part)}</button>
 	{/if}
 	<span class="input-group">
 		<span class="currency-symbol">{currencySymbol}</span>
 		<!-- Without this, some browsers restore this field's value from before a page reload
 		     directly on the DOM node, silently out of sync with the (correctly reloaded)
-		     `value` above, since that restore never fires an input/change event. -->
+		     `text` above, since that restore never fires an input/change event. -->
 		<input
-			type="number"
+			type="text"
 			inputmode="decimal"
-			min="0"
-			step="0.01"
 			autocomplete="off"
-			bind:value
+			placeholder="0"
+			aria-label="Amount for {partNames.nameFor(part)}"
+			bind:value={text}
+			onfocus={handleFocus}
 			oninput={handleInput}
+			onblur={handleBlur}
 		/>
 	</span>
 </div>
@@ -80,9 +110,15 @@
 	.row {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
+		gap: 0.5rem;
 		padding: 0.5rem 0;
+	}
+
+	.swatch {
+		flex-shrink: 0;
+		width: 0.625rem;
+		height: 0.625rem;
+		border-radius: 999px;
 	}
 
 	.name {
@@ -115,6 +151,7 @@
 		position: relative;
 		display: inline-flex;
 		align-items: center;
+		margin-left: auto;
 	}
 
 	.currency-symbol {
@@ -132,14 +169,5 @@
 		font: inherit;
 		text-align: right;
 		font-variant-numeric: tabular-nums;
-		appearance: textfield;
-		-webkit-appearance: textfield;
-		-moz-appearance: textfield;
-	}
-
-	.input-group input::-webkit-outer-spin-button,
-	.input-group input::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
 	}
 </style>

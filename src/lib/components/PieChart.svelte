@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PART_COLORS } from '$lib/colors';
-	import { computeAnnularSlices } from '$lib/pie';
+	import { computeAnnularSlices, pointOnCircle } from '$lib/pie';
 	import type { PortfolioPart } from '$lib/portfolio';
 	import { viewportSize } from '$lib/state/viewport.svelte';
 
@@ -12,16 +12,40 @@
 		holdings?: Record<string, number>;
 	} = $props();
 
-	const CENTER = 56;
+	// The viewBox is wider than the ring itself so the target-percentage labels have
+	// room to sit outside it without being clipped - kept as tight as the widest
+	// label ("70%") allows, so the ring isn't surrounded by excess empty margin.
+	// `.chart`'s max-width is scaled by the same factor, so the ring's on-screen
+	// size stays put regardless of how much of that margin the labels need.
+	const VIEWBOX = 156;
+	const CENTER = 78;
 	const ACTUAL_RADIUS = 40;
-	const TARGET_INNER_RADIUS = 44;
+	const TARGET_INNER_RADIUS = 42;
 	const TARGET_OUTER_RADIUS = 52;
+	const LABEL_LINE_RADIUS = TARGET_OUTER_RADIUS + 4;
+	const LABEL_TEXT_RADIUS = TARGET_OUTER_RADIUS + 7;
+	// The actual disc's own labels sit inside its slices (rather than pointing
+	// outward like the target ring's) so they don't collide with the target labels.
+	const ACTUAL_LABEL_RADIUS = ACTUAL_RADIUS * 0.6;
 
 	const targetSlices = $derived(
 		computeAnnularSlices(
 			parts.map((part) => ({ key: part.key, pct: part.targetPct })),
 			{ cx: CENTER, cy: CENTER, innerRadius: TARGET_INNER_RADIUS, outerRadius: TARGET_OUTER_RADIUS }
 		)
+	);
+
+	// A short marker line plus label pointing at each target slice, so its percentage
+	// can be read directly off the chart.
+	const sliceLabels = $derived(
+		targetSlices.map((slice, i) => {
+			const lineStart = pointOnCircle(CENTER, CENTER, TARGET_OUTER_RADIUS, slice.midAngleDeg);
+			const lineEnd = pointOnCircle(CENTER, CENTER, LABEL_LINE_RADIUS, slice.midAngleDeg);
+			const textPoint = pointOnCircle(CENTER, CENTER, LABEL_TEXT_RADIUS, slice.midAngleDeg);
+			const anchor =
+				textPoint.x > CENTER + 1 ? 'start' : textPoint.x < CENTER - 1 ? 'end' : 'middle';
+			return { key: slice.key, lineStart, lineEnd, textPoint, anchor, pct: parts[i].targetPct };
+		})
 	);
 
 	const total = $derived(parts.reduce((sum, part) => sum + (holdings[part.key] ?? 0), 0));
@@ -46,6 +70,16 @@
 			: []
 	);
 
+	// Labels for the actual-holdings slices sit directly inside each slice instead of
+	// pointing outward, since the target ring already occupies the space around the
+	// outside of the chart.
+	const actualSliceLabels = $derived(
+		actualSlices.map((slice, i) => {
+			const textPoint = pointOnCircle(CENTER, CENTER, ACTUAL_LABEL_RADIUS, slice.midAngleDeg);
+			return { key: slice.key, textPoint, pct: actualParts[i]?.pct ?? 0 };
+		})
+	);
+
 	// Vertical space gets tight when the on-screen keyboard opens on a phone. Drop to
 	// horizontal bars once there's too little height for the pie chart. Driven by the
 	// live visual-viewport height (not a `@media (max-height)` query) since Safari never
@@ -54,12 +88,43 @@
 </script>
 
 <div class="chart" style:display={barsOnly ? 'none' : undefined}>
-	<svg viewBox="0 0 112 112" class="pie" role="img" aria-label="Portfolio allocation">
+	<svg viewBox="0 0 {VIEWBOX} {VIEWBOX}" class="pie" role="img" aria-label="Portfolio allocation">
+		<circle class="track" cx={CENTER} cy={CENTER} r={TARGET_OUTER_RADIUS} />
 		{#each targetSlices as slice, i (slice.key)}
 			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
 		{/each}
 		{#each actualSlices as slice, i (slice.key)}
-			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
+			<path
+				d={slice.path}
+				fill={PART_COLORS[i % PART_COLORS.length]}
+				stroke="#fff"
+				stroke-width="1"
+			/>
+		{/each}
+		{#each sliceLabels as label (label.key)}
+			<line
+				x1={label.lineStart.x}
+				y1={label.lineStart.y}
+				x2={label.lineEnd.x}
+				y2={label.lineEnd.y}
+				class="label-line"
+			/>
+			<text
+				x={label.textPoint.x}
+				y={label.textPoint.y}
+				text-anchor={label.anchor}
+				dominant-baseline="middle"
+				class="label-text">{label.pct}%</text
+			>
+		{/each}
+		{#each actualSliceLabels as label (label.key)}
+			<text
+				x={label.textPoint.x}
+				y={label.textPoint.y}
+				text-anchor="middle"
+				dominant-baseline="middle"
+				class="label-text actual-label-text">{label.pct.toFixed(1)}%</text
+			>
 		{/each}
 	</svg>
 	{#if total <= 0}
@@ -101,7 +166,7 @@
 	.chart {
 		position: relative;
 		width: 100%;
-		max-width: 14rem;
+		max-width: 19.5rem;
 		aspect-ratio: 1;
 		margin: 1rem auto;
 	}
@@ -110,6 +175,26 @@
 		width: 100%;
 		height: 100%;
 		display: block;
+	}
+
+	.track {
+		fill: #e2e8f0;
+	}
+
+	.label-line {
+		stroke: #94a3b8;
+		stroke-width: 1;
+	}
+
+	.label-text {
+		font-size: 9px;
+		font-weight: 600;
+		fill: #0f172a;
+	}
+
+	.actual-label-text {
+		font-size: 7px;
+		fill: #fff;
 	}
 
 	.empty-hint {

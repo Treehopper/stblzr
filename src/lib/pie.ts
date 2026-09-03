@@ -1,6 +1,7 @@
 export interface AnnularSlice {
 	key: string;
 	path: string;
+	midAngleDeg: number;
 }
 
 export interface AnnularOptions {
@@ -10,7 +11,7 @@ export interface AnnularOptions {
 	outerRadius: number;
 }
 
-function pointOnCircle(cx: number, cy: number, radius: number, angleDeg: number) {
+export function pointOnCircle(cx: number, cy: number, radius: number, angleDeg: number) {
 	const angleRad = ((angleDeg - 90) * Math.PI) / 180;
 	return { x: cx + radius * Math.cos(angleRad), y: cy + radius * Math.sin(angleRad) };
 }
@@ -83,7 +84,7 @@ export function computeAnnularSlices(
 			}
 		}
 
-		slices.push({ key: part.key, path });
+		slices.push({ key: part.key, path, midAngleDeg: (start + end) / 2 });
 		angle = end;
 	}
 

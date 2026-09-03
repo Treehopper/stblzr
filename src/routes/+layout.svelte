@@ -11,6 +11,17 @@
 {@render children()}
 
 <style>
+	:global(:root) {
+		/* Single accent used across header, active controls, and primary buttons - the
+		   pie chart's part colors are a separate, deliberately distinct categorical
+		   palette (see colors.ts) since they encode data, not brand chrome. */
+		--accent: #2563eb;
+		/* Lighter/darker steps of --accent, used to give the header and primary buttons a
+		   subtle gradient instead of a flat fill. */
+		--accent-light: #3b82f6;
+		--accent-dark: #1d4ed8;
+	}
+
 	:global(html, body) {
 		margin: 0;
 		height: 100%;
@@ -26,5 +37,12 @@
 		position: fixed;
 		inset: 0;
 		width: 100%;
+		/* Without this, elements outside the two screen components (which each set their
+		   own font-family) fall back to the browser's default serif font instead of
+		   matching the rest of the sans-serif UI. */
+		font-family:
+			system-ui,
+			-apple-system,
+			sans-serif;
 	}
 </style>
