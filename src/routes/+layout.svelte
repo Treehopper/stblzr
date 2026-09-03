@@ -6,6 +6,14 @@
 	let { children } = $props();
 
 	const theme = $derived(getTheme(themeSelection.id));
+
+	// In standalone/PWA mode, iOS paints the safe-area and overscroll regions using
+	// <html>'s own background rather than any descendant element's - without this, a
+	// gap there (e.g. below the fixed-height app shell) shows through as a stray white
+	// bar instead of the theme's background.
+	$effect(() => {
+		document.documentElement.style.background = theme.bg;
+	});
 </script>
 
 <svelte:head>
