@@ -1,32 +1,48 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
+	import { themeSelection } from '$lib/state/theme.svelte';
+	import { getTheme } from '$lib/themes';
 
 	let { children } = $props();
+
+	const theme = $derived(getTheme(themeSelection.id));
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-{@render children()}
+<div
+	class="theme-root"
+	style:color-scheme={theme.mode}
+	style:--accent={theme.accent}
+	style:--accent-light={theme.accentLight}
+	style:--accent-dark={theme.accentDark}
+	style:--bg={theme.bg}
+	style:--surface={theme.surface}
+	style:--surface-alt={theme.surfaceAlt}
+	style:--text={theme.text}
+	style:--text-muted={theme.textMuted}
+	style:--border={theme.border}
+	style:--border-strong={theme.borderStrong}
+	style:--header-text={theme.headerText}
+	style:--warning={theme.warning}
+>
+	{@render children()}
+</div>
 
 <style>
-	:global(:root) {
-		/* Single accent used across header, active controls, and primary buttons - the
-		   pie chart's part colors are a separate, deliberately distinct categorical
-		   palette (see colors.ts) since they encode data, not brand chrome. */
-		--accent: #2563eb;
-		/* Lighter/darker steps of --accent, used to give the header and primary buttons a
-		   subtle gradient instead of a flat fill. */
-		--accent-light: #3b82f6;
-		--accent-dark: #1d4ed8;
-	}
-
 	:global(html, body) {
 		margin: 0;
 		height: 100%;
 		overflow: hidden;
 		overscroll-behavior: none;
+	}
+
+	.theme-root {
+		height: 100%;
+		background: var(--bg);
+		color: var(--text);
 	}
 
 	/* iOS Safari scrolls the *document* to reveal a focused input even when it can't be

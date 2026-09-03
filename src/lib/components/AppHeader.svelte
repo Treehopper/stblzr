@@ -1,15 +1,33 @@
 <script lang="ts">
-	let { title, subtitle }: { title: string; subtitle?: string } = $props();
+	import ThemeMenu from '$lib/components/ThemeMenu.svelte';
+
+	let { title }: { title: string } = $props();
+
+	let menuOpen = $state(false);
 </script>
 
 <header class="app-header">
 	<div class="row">
+		<button
+			type="button"
+			class="menu-button"
+			aria-label="Open menu"
+			aria-haspopup="true"
+			aria-expanded={menuOpen}
+			onclick={() => (menuOpen = true)}
+		>
+			<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false">
+				<rect x="2" y="4.5" width="16" height="1.6" rx="0.8" fill="currentColor" />
+				<rect x="2" y="9.2" width="16" height="1.6" rx="0.8" fill="currentColor" />
+				<rect x="2" y="13.9" width="16" height="1.6" rx="0.8" fill="currentColor" />
+			</svg>
+		</button>
 		<h1>{title}</h1>
-		{#if subtitle}
-			<span class="subtitle">{subtitle}</span>
-		{/if}
+		<span class="spacer" aria-hidden="true"></span>
 	</div>
 </header>
+
+<ThemeMenu bind:open={menuOpen} />
 
 <style>
 	.app-header {
@@ -24,9 +42,9 @@
 	.row {
 		max-width: 28rem;
 		margin: 0 auto;
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
+		display: grid;
+		grid-template-columns: 2rem 1fr 2rem;
+		align-items: center;
 		gap: 0.75rem;
 	}
 
@@ -34,13 +52,29 @@
 		margin: 0;
 		font-size: 1.375rem;
 		font-weight: 700;
-		color: #fff;
+		color: var(--header-text, #fff);
+		text-align: center;
 	}
 
-	.subtitle {
-		flex-shrink: 0;
-		font-size: 0.8125rem;
-		font-weight: 600;
-		color: rgb(255 255 255 / 85%);
+	.spacer {
+		width: 2rem;
+	}
+
+	.menu-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		background: none;
+		border: none;
+		border-radius: 0.375rem;
+		color: var(--header-text, #fff);
+		cursor: pointer;
+	}
+
+	.menu-button:hover {
+		background: rgb(255 255 255 / 15%);
 	}
 </style>

@@ -1,0 +1,406 @@
+export type ThemeMode = 'light' | 'dark';
+
+export interface Theme {
+	id: string;
+	name: string;
+	mode: ThemeMode;
+	accent: string;
+	accentLight: string;
+	accentDark: string;
+	bg: string;
+	surface: string;
+	surfaceAlt: string;
+	text: string;
+	textMuted: string;
+	border: string;
+	borderStrong: string;
+	headerText: string;
+	warning: string;
+	// Colors for the pie-chart/holdings-list slices (up to 3, one per portfolio part).
+	// Chosen per theme from blue/teal/green hues only - never orange or red (reserved
+	// for warnings) and never purple (a specific ask, even where it's the theme's own
+	// accent, e.g. Dracula/Rosé Pine).
+	partColors: [string, string, string];
+}
+
+// Ten light and ten dark schemes: a few originals (Daybreak/Midnight, Sand, Mint,
+// Rosé Pine) plus recreations of popular editor/terminal themes (Solarized, Nord,
+// Gruvbox, Catppuccin, One Light/Dark, GitHub, Dracula, Tokyo Night) so users can
+// pick something they already know. Named individually so specific ones can be
+// requested to keep or drop later.
+export const THEMES: Theme[] = [
+	// --- Light ---
+	{
+		id: 'daybreak',
+		name: 'Daybreak',
+		mode: 'light',
+		accent: '#2563eb',
+		accentLight: '#3b82f6',
+		accentDark: '#1d4ed8',
+		bg: '#ffffff',
+		surface: '#f8fafc',
+		surfaceAlt: '#e2e8f0',
+		text: '#0f172a',
+		textMuted: '#64748b',
+		border: '#cbd5e1',
+		borderStrong: '#94a3b8',
+		headerText: '#ffffff',
+		warning: '#b45309',
+		partColors: ['#2563eb', '#0d9488', '#16a34a']
+	},
+	{
+		id: 'solarized-light',
+		name: 'Solarized Light',
+		mode: 'light',
+		accent: '#268bd2',
+		accentLight: '#2aa1e8',
+		accentDark: '#1e6ea3',
+		bg: '#fdf6e3',
+		surface: '#eee8d5',
+		surfaceAlt: '#e3dcc6',
+		text: '#586e75',
+		textMuted: '#93a1a1',
+		border: '#d3cbb7',
+		borderStrong: '#93a1a1',
+		headerText: '#fdf6e3',
+		warning: '#cb4b16',
+		partColors: ['#268bd2', '#2aa198', '#859900']
+	},
+	{
+		id: 'nord-light',
+		name: 'Nord Light',
+		mode: 'light',
+		accent: '#5e81ac',
+		accentLight: '#81a1c1',
+		accentDark: '#4c6a92',
+		bg: '#eceff4',
+		surface: '#e5e9f0',
+		surfaceAlt: '#d8dee9',
+		text: '#2e3440',
+		textMuted: '#4c566a',
+		border: '#d8dee9',
+		borderStrong: '#b9c2d0',
+		headerText: '#eceff4',
+		warning: '#d08770',
+		partColors: ['#5e81ac', '#88c0d0', '#a3be8c']
+	},
+	{
+		id: 'gruvbox-light',
+		name: 'Gruvbox Light',
+		mode: 'light',
+		accent: '#458588',
+		accentLight: '#5c9ea1',
+		accentDark: '#33646c',
+		bg: '#fbf1c7',
+		surface: '#ebdbb2',
+		surfaceAlt: '#d5c4a1',
+		text: '#3c3836',
+		textMuted: '#7c6f64',
+		border: '#d5c4a1',
+		borderStrong: '#bdae93',
+		headerText: '#fbf1c7',
+		warning: '#d65d0e',
+		partColors: ['#458588', '#98971a', '#689d6a']
+	},
+	{
+		id: 'catppuccin-latte',
+		name: 'Catppuccin Latte',
+		mode: 'light',
+		accent: '#1e66f5',
+		accentLight: '#4c7cf7',
+		accentDark: '#1656c9',
+		bg: '#eff1f5',
+		surface: '#e6e9ef',
+		surfaceAlt: '#dce0e8',
+		text: '#4c4f69',
+		textMuted: '#6c6f85',
+		border: '#ccd0da',
+		borderStrong: '#acb0be',
+		headerText: '#eff1f5',
+		warning: '#fe640b',
+		partColors: ['#1e66f5', '#179299', '#40a02b']
+	},
+	{
+		id: 'one-light',
+		name: 'One Light',
+		mode: 'light',
+		accent: '#4078f2',
+		accentLight: '#61a0ff',
+		accentDark: '#2f5fc4',
+		bg: '#fafafa',
+		surface: '#f0f0f1',
+		surfaceAlt: '#e5e5e6',
+		text: '#383a42',
+		textMuted: '#696c77',
+		border: '#e5e5e6',
+		borderStrong: '#c9c9ca',
+		headerText: '#fafafa',
+		warning: '#c18401',
+		partColors: ['#4078f2', '#0184bc', '#50a14f']
+	},
+	{
+		id: 'github-light',
+		name: 'GitHub Light',
+		mode: 'light',
+		accent: '#0969da',
+		accentLight: '#218bff',
+		accentDark: '#0757ba',
+		bg: '#ffffff',
+		surface: '#f6f8fa',
+		surfaceAlt: '#eaeef2',
+		text: '#1f2328',
+		textMuted: '#59636e',
+		border: '#d1d9e0',
+		borderStrong: '#b6bcc3',
+		headerText: '#ffffff',
+		warning: '#9a6700',
+		partColors: ['#0969da', '#0891b2', '#1a7f37']
+	},
+	{
+		id: 'rose-pine-dawn',
+		name: 'Rosé Pine Dawn',
+		mode: 'light',
+		accent: '#907aa9',
+		accentLight: '#b189c2',
+		accentDark: '#6e5c85',
+		bg: '#faf4ed',
+		surface: '#fffaf3',
+		surfaceAlt: '#f2e9e1',
+		text: '#575279',
+		textMuted: '#797593',
+		border: '#dfdad9',
+		borderStrong: '#cecacd',
+		headerText: '#faf4ed',
+		warning: '#ea9d34',
+		// Rosé Pine's own accent ("iris") is purple, so this skips it in favor of the
+		// palette's teal/cyan pine+foam plus a custom earthy green to match.
+		partColors: ['#286983', '#56949f', '#6a8f52']
+	},
+	{
+		id: 'sand',
+		name: 'Sand',
+		mode: 'light',
+		accent: '#c2703d',
+		accentLight: '#d98a52',
+		accentDark: '#9c5626',
+		bg: '#fdfaf6',
+		surface: '#f7f0e7',
+		surfaceAlt: '#eee1d0',
+		text: '#4a3f35',
+		textMuted: '#8a7a68',
+		border: '#e6d8c3',
+		borderStrong: '#cbb797',
+		headerText: '#fdfaf6',
+		warning: '#b3541e',
+		// Sand's own accent is an orange/brown, so this uses muted blue/teal/green
+		// instead to keep warm warning-adjacent hues off the chart.
+		partColors: ['#3b6ea5', '#3f7d76', '#4f7942']
+	},
+	{
+		id: 'mint',
+		name: 'Mint',
+		mode: 'light',
+		accent: '#0d9488',
+		accentLight: '#14b8a6',
+		accentDark: '#0f766e',
+		bg: '#f6fdfb',
+		surface: '#ecfdf5',
+		surfaceAlt: '#d1fae5',
+		text: '#0f2e28',
+		textMuted: '#4b7c72',
+		border: '#b7e4d8',
+		borderStrong: '#86cdb9',
+		headerText: '#f6fdfb',
+		warning: '#b45309',
+		partColors: ['#0d9488', '#059669', '#0e7490']
+	},
+	// --- Dark ---
+	{
+		id: 'midnight',
+		name: 'Midnight',
+		mode: 'dark',
+		accent: '#3b82f6',
+		accentLight: '#60a5fa',
+		accentDark: '#2563eb',
+		bg: '#0f172a',
+		surface: '#1e293b',
+		surfaceAlt: '#334155',
+		text: '#f1f5f9',
+		textMuted: '#94a3b8',
+		border: '#334155',
+		borderStrong: '#475569',
+		headerText: '#f8fafc',
+		warning: '#fbbf24',
+		partColors: ['#3b82f6', '#14b8a6', '#22c55e']
+	},
+	{
+		id: 'solarized-dark',
+		name: 'Solarized Dark',
+		mode: 'dark',
+		accent: '#268bd2',
+		accentLight: '#3d9bdb',
+		accentDark: '#1e6ea3',
+		bg: '#002b36',
+		surface: '#073642',
+		surfaceAlt: '#0a4552',
+		text: '#839496',
+		textMuted: '#586e75',
+		border: '#0a4552',
+		borderStrong: '#586e75',
+		headerText: '#fdf6e3',
+		warning: '#cb4b16',
+		partColors: ['#268bd2', '#2aa198', '#859900']
+	},
+	{
+		id: 'dracula',
+		name: 'Dracula',
+		mode: 'dark',
+		accent: '#bd93f9',
+		accentLight: '#d6acff',
+		accentDark: '#9d7cd8',
+		bg: '#282a36',
+		surface: '#343746',
+		surfaceAlt: '#44475a',
+		text: '#f8f8f2',
+		textMuted: '#6272a4',
+		border: '#44475a',
+		borderStrong: '#6272a4',
+		headerText: '#f8f8f2',
+		warning: '#ffb86c',
+		// Dracula's own accent is purple, so this skips it for the palette's cyan/green
+		// plus its muted blue-gray "comment" color for a third distinct hue.
+		partColors: ['#8be9fd', '#50fa7b', '#6272a4']
+	},
+	{
+		id: 'nord',
+		name: 'Nord',
+		mode: 'dark',
+		accent: '#88c0d0',
+		accentLight: '#8fbcbb',
+		accentDark: '#5e81ac',
+		bg: '#2e3440',
+		surface: '#3b4252',
+		surfaceAlt: '#434c5e',
+		text: '#eceff4',
+		textMuted: '#9099ac',
+		border: '#434c5e',
+		borderStrong: '#4c566a',
+		headerText: '#eceff4',
+		warning: '#ebcb8b',
+		partColors: ['#88c0d0', '#5e81ac', '#a3be8c']
+	},
+	{
+		id: 'gruvbox-dark',
+		name: 'Gruvbox Dark',
+		mode: 'dark',
+		accent: '#83a598',
+		accentLight: '#a0c0b5',
+		accentDark: '#5f8a82',
+		bg: '#282828',
+		surface: '#3c3836',
+		surfaceAlt: '#504945',
+		text: '#ebdbb2',
+		textMuted: '#a89984',
+		border: '#504945',
+		borderStrong: '#665c54',
+		headerText: '#fbf1c7',
+		warning: '#fe8019',
+		partColors: ['#83a598', '#b8bb26', '#8ec07c']
+	},
+	{
+		id: 'catppuccin-mocha',
+		name: 'Catppuccin Mocha',
+		mode: 'dark',
+		accent: '#89b4fa',
+		accentLight: '#a6c8fc',
+		accentDark: '#6c94d6',
+		bg: '#1e1e2e',
+		surface: '#313244',
+		surfaceAlt: '#45475a',
+		text: '#cdd6f4',
+		textMuted: '#9399b2',
+		border: '#45475a',
+		borderStrong: '#585b70',
+		headerText: '#cdd6f4',
+		warning: '#fab387',
+		partColors: ['#89b4fa', '#94e2d5', '#a6e3a1']
+	},
+	{
+		id: 'one-dark',
+		name: 'One Dark',
+		mode: 'dark',
+		accent: '#61afef',
+		accentLight: '#82c1f5',
+		accentDark: '#4d94d1',
+		bg: '#282c34',
+		surface: '#2c313c',
+		surfaceAlt: '#3b4048',
+		text: '#abb2bf',
+		textMuted: '#7f848e',
+		border: '#3b4048',
+		borderStrong: '#4b5263',
+		headerText: '#dbe1e8',
+		warning: '#e5c07b',
+		partColors: ['#61afef', '#56b6c2', '#98c379']
+	},
+	{
+		id: 'github-dark',
+		name: 'GitHub Dark',
+		mode: 'dark',
+		accent: '#4493f8',
+		accentLight: '#6cb0ff',
+		accentDark: '#2f6fca',
+		bg: '#0d1117',
+		surface: '#161b22',
+		surfaceAlt: '#21262d',
+		text: '#e6edf3',
+		textMuted: '#8d96a0',
+		border: '#30363d',
+		borderStrong: '#444c56',
+		headerText: '#f0f6fc',
+		warning: '#d29922',
+		partColors: ['#4493f8', '#39c5cf', '#3fb950']
+	},
+	{
+		id: 'tokyo-night',
+		name: 'Tokyo Night',
+		mode: 'dark',
+		accent: '#7aa2f7',
+		accentLight: '#9ab8fb',
+		accentDark: '#5a7fd6',
+		bg: '#1a1b26',
+		surface: '#24283b',
+		surfaceAlt: '#2f3549',
+		text: '#c0caf5',
+		textMuted: '#787c99',
+		border: '#2f3549',
+		borderStrong: '#414868',
+		headerText: '#c0caf5',
+		warning: '#e0af68',
+		partColors: ['#7aa2f7', '#7dcfff', '#9ece6a']
+	},
+	{
+		id: 'rose-pine',
+		name: 'Rosé Pine',
+		mode: 'dark',
+		accent: '#c4a7e7',
+		accentLight: '#d8c3ee',
+		accentDark: '#a687c9',
+		bg: '#191724',
+		surface: '#1f1d2e',
+		surfaceAlt: '#26233a',
+		text: '#e0def4',
+		textMuted: '#908caa',
+		border: '#26233a',
+		borderStrong: '#403d52',
+		headerText: '#e0def4',
+		warning: '#f6c177',
+		// Rosé Pine's own accent ("iris") is purple, so this skips it in favor of the
+		// palette's teal/cyan pine+foam plus a custom soft green to match.
+		partColors: ['#31748f', '#9ccfd8', '#7aa87c']
+	}
+];
+
+export function getTheme(id: string): Theme {
+	return THEMES.find((theme) => theme.id === id) ?? THEMES[0];
+}

@@ -127,22 +127,23 @@
 		border-bottom: 1px dashed transparent;
 		padding: 0;
 		font: inherit;
-		color: #0f172a;
+		color: var(--text);
 		text-align: left;
 		cursor: pointer;
 	}
 
 	.name:hover,
 	.name:focus-visible {
-		border-bottom-color: #94a3b8;
+		border-bottom-color: var(--border-strong);
 	}
 
 	.name-input {
 		flex: 1;
 		min-width: 0;
 		font: inherit;
-		color: #0f172a;
-		border: 1px solid #cbd5e1;
+		color: var(--text);
+		background: var(--surface);
+		border: 1px solid var(--border);
 		border-radius: 0.375rem;
 		padding: 0.125rem 0.375rem;
 	}
@@ -157,14 +158,16 @@
 	.currency-symbol {
 		position: absolute;
 		left: 0.5rem;
-		color: #64748b;
+		color: var(--text-muted);
 		pointer-events: none;
 	}
 
 	.input-group input {
 		width: 8rem;
 		padding: 0.375rem 0.5rem 0.375rem 1.5rem;
-		border: 1px solid #cbd5e1;
+		color: var(--text);
+		background: var(--surface);
+		border: 1px solid var(--border);
 		border-radius: 0.5rem;
 		font: inherit;
 		text-align: right;

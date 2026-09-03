@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { PART_COLORS } from '$lib/colors';
 	import { computeAnnularSlices, pointOnCircle } from '$lib/pie';
 	import type { PortfolioPart } from '$lib/portfolio';
+	import { themeSelection } from '$lib/state/theme.svelte';
 	import { viewportSize } from '$lib/state/viewport.svelte';
+	import { getTheme } from '$lib/themes';
 
 	let {
 		parts,
@@ -11,6 +12,8 @@
 		parts: PortfolioPart[];
 		holdings?: Record<string, number>;
 	} = $props();
+
+	const partColors = $derived(getTheme(themeSelection.id).partColors);
 
 	// The viewBox is wider than the ring itself so the target-percentage labels have
 	// room to sit outside it without being clipped - kept as tight as the widest
@@ -91,13 +94,13 @@
 	<svg viewBox="0 0 {VIEWBOX} {VIEWBOX}" class="pie" role="img" aria-label="Portfolio allocation">
 		<circle class="track" cx={CENTER} cy={CENTER} r={TARGET_OUTER_RADIUS} />
 		{#each targetSlices as slice, i (slice.key)}
-			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
+			<path d={slice.path} fill={partColors[i % partColors.length]} />
 		{/each}
 		{#each actualSlices as slice, i (slice.key)}
 			<path
 				d={slice.path}
-				fill={PART_COLORS[i % PART_COLORS.length]}
-				stroke="#fff"
+				fill={partColors[i % partColors.length]}
+				stroke="var(--bg)"
 				stroke-width="1"
 			/>
 		{/each}
@@ -143,7 +146,7 @@
 			<span
 				class="segment"
 				style:width="{part.targetPct}%"
-				style:background={PART_COLORS[i % PART_COLORS.length]}
+				style:background={partColors[i % partColors.length]}
 			></span>
 		{/each}
 	</span>
@@ -153,7 +156,7 @@
 				<span
 					class="segment"
 					style:width="{part.pct}%"
-					style:background={PART_COLORS[i % PART_COLORS.length]}
+					style:background={partColors[i % partColors.length]}
 				></span>
 			{/each}
 		</span>
@@ -178,18 +181,18 @@
 	}
 
 	.track {
-		fill: #e2e8f0;
+		fill: var(--surface-alt);
 	}
 
 	.label-line {
-		stroke: #94a3b8;
+		stroke: var(--border-strong);
 		stroke-width: 1;
 	}
 
 	.label-text {
 		font-size: 9px;
 		font-weight: 600;
-		fill: #0f172a;
+		fill: var(--text);
 	}
 
 	.actual-label-text {
@@ -207,7 +210,7 @@
 		margin: 0 auto;
 		text-align: center;
 		font-size: 0.8125rem;
-		color: #64748b;
+		color: var(--text-muted);
 		pointer-events: none;
 	}
 
@@ -224,7 +227,7 @@
 		height: 0.625rem;
 		border-radius: 999px;
 		overflow: hidden;
-		background: #e2e8f0;
+		background: var(--surface-alt);
 	}
 
 	.actual-bar {
@@ -238,6 +241,6 @@
 	.bar-empty {
 		margin: 0;
 		font-size: 0.75rem;
-		color: #64748b;
+		color: var(--text-muted);
 	}
 </style>

@@ -1,10 +1,13 @@
 <script lang="ts">
 	import AppScreen from '$lib/components/AppScreen.svelte';
-	import { PART_COLORS } from '$lib/colors';
 	import { CURRENCY_OPTIONS } from '$lib/currency';
 	import { PORTFOLIO_TEMPLATES } from '$lib/portfolio';
 	import { currencySelection } from '$lib/state/currency.svelte';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
+	import { themeSelection } from '$lib/state/theme.svelte';
+	import { getTheme } from '$lib/themes';
+
+	const partColors = $derived(getTheme(themeSelection.id).partColors);
 </script>
 
 <AppScreen title="Choose your portfolio template">
@@ -70,7 +73,7 @@
 								<span
 									class="segment"
 									style:width="{part.targetPct}%"
-									style:background={PART_COLORS[i % PART_COLORS.length]}
+									style:background={partColors[i % partColors.length]}
 								></span>
 							{/each}
 						</span>
@@ -86,12 +89,12 @@
 		max-width: 28rem;
 		margin: 0 auto;
 		padding: 1.5rem 1rem;
-		color: #0f172a;
+		color: var(--text);
 	}
 
 	.intro {
 		margin: 0 0 1.5rem;
-		color: #475569;
+		color: var(--text-muted);
 	}
 
 	.templates-heading {
@@ -119,8 +122,8 @@
 	.currency-option {
 		flex: 1;
 		text-align: center;
-		background: #f8fafc;
-		border: 2px solid #e2e8f0;
+		background: var(--surface);
+		border: 2px solid var(--border);
 		border-radius: 0.75rem;
 		padding: 0.5rem;
 		cursor: pointer;
@@ -131,7 +134,7 @@
 
 	.currency-option.selected {
 		border-color: var(--accent);
-		background: #f1f5f9;
+		background: var(--surface-alt);
 		box-shadow: 0 1px 3px rgb(37 99 235 / 25%);
 	}
 
@@ -147,8 +150,8 @@
 	.template {
 		width: 100%;
 		text-align: left;
-		background: #f8fafc;
-		border: 2px solid #e2e8f0;
+		background: var(--surface);
+		border: 2px solid var(--border);
 		border-radius: 0.75rem;
 		padding: 1rem;
 		cursor: pointer;
@@ -162,7 +165,7 @@
 
 	.template.selected {
 		border-color: var(--accent);
-		background: #f1f5f9;
+		background: var(--surface-alt);
 		box-shadow: 0 1px 3px rgb(37 99 235 / 25%);
 	}
 
@@ -176,12 +179,12 @@
 		align-items: flex-start;
 		gap: 0.375rem;
 		font-size: 0.875rem;
-		color: #475569;
+		color: var(--text-muted);
 	}
 
 	.info-icon {
 		flex-shrink: 0;
-		color: #94a3b8;
+		color: var(--border-strong);
 	}
 
 	.bar {
@@ -189,7 +192,7 @@
 		height: 0.625rem;
 		border-radius: 999px;
 		overflow: hidden;
-		background: #e2e8f0;
+		background: var(--surface-alt);
 	}
 
 	.segment {
