@@ -14,7 +14,14 @@
 
 	// The displayed text: raw digits while focused (so typing isn't fought by grouping
 	// separators moving under the cursor), grouped/formatted once the field is blurred.
-	let text = $state(value ? formatAmount(value, untrack(() => currencySelection.id)) : '');
+	let text = $state(
+		value
+			? formatAmount(
+					value,
+					untrack(() => currencySelection.id)
+				)
+			: ''
+	);
 	let focused = $state(false);
 
 	$effect(() => {
