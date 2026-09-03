@@ -14,7 +14,10 @@
 <style>
 	.app-header {
 		flex-shrink: 0;
-		background: var(--accent);
+		background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
+		box-shadow:
+			inset 0 -1px 0 rgb(255 255 255 / 12%),
+			0 2px 6px rgb(15 23 42 / 20%);
 		padding: calc(0.875rem + env(safe-area-inset-top)) 1rem 0.875rem;
 	}
 

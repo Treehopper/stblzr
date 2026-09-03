@@ -16,6 +16,10 @@
 		   pie chart's part colors are a separate, deliberately distinct categorical
 		   palette (see colors.ts) since they encode data, not brand chrome. */
 		--accent: #2563eb;
+		/* Lighter/darker steps of --accent, used to give the header and primary buttons a
+		   subtle gradient instead of a flat fill. */
+		--accent-light: #3b82f6;
+		--accent-dark: #1d4ed8;
 	}
 
 	:global(html, body) {

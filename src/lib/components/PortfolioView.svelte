@@ -174,13 +174,30 @@
 	}
 
 	button {
-		background: var(--accent);
+		background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
 		color: #f8fafc;
 		border: none;
 		border-radius: 0.5rem;
 		padding: 0.5rem 1rem;
 		font: inherit;
 		cursor: pointer;
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 20%),
+			0 1px 2px rgb(15 23 42 / 25%);
+		transition:
+			filter 0.15s ease,
+			box-shadow 0.15s ease,
+			transform 0.05s ease;
+	}
+
+	button:hover {
+		filter: brightness(1.05);
+	}
+
+	button:active {
+		filter: brightness(0.95);
+		box-shadow: inset 0 1px 2px rgb(15 23 42 / 25%);
+		transform: translateY(1px);
 	}
 
 	.option-tabs {
@@ -192,11 +209,17 @@
 		flex: 1;
 		background: #e2e8f0;
 		color: #334155;
+		box-shadow:
+			inset 0 1px 2px rgb(15 23 42 / 8%),
+			0 1px 0 rgb(255 255 255 / 60%);
 	}
 
 	.tab.active {
-		background: var(--accent);
+		background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
 		color: #f8fafc;
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 20%),
+			0 1px 2px rgb(15 23 42 / 25%);
 	}
 
 	.actions {
