@@ -13,22 +13,20 @@
 		holdings?: Record<string, number>;
 	} = $props();
 
-	// The viewBox is wider than the ring itself so the target- and actual-percentage
-	// labels have room to sit outside it without being clipped. `.chart`'s max-width is
-	// scaled up by the same factor, so the ring's on-screen size is unchanged - only the
-	// margin available for labels grows.
-	const VIEWBOX = 200;
-	const CENTER = 100;
+	// The viewBox is wider than the ring itself so the target-percentage labels have
+	// room to sit outside it without being clipped. `.chart`'s max-width is scaled up
+	// by the same factor, so the ring's on-screen size is unchanged - only the margin
+	// available for labels grows.
+	const VIEWBOX = 168;
+	const CENTER = 84;
 	const ACTUAL_RADIUS = 40;
 	const TARGET_INNER_RADIUS = 42;
 	const TARGET_OUTER_RADIUS = 52;
 	const LABEL_LINE_RADIUS = TARGET_OUTER_RADIUS + 6;
 	const LABEL_TEXT_RADIUS = TARGET_OUTER_RADIUS + 10;
-	// The actual disc's labels point from further in (its own edge, inside the target
-	// ring) but land further out than the target labels, so the two leader lines and
-	// their text don't collide.
-	const ACTUAL_LABEL_LINE_RADIUS = LABEL_TEXT_RADIUS + 6;
-	const ACTUAL_LABEL_TEXT_RADIUS = LABEL_TEXT_RADIUS + 10;
+	// The actual disc's own labels sit inside its slices (rather than pointing
+	// outward like the target ring's) so they don't collide with the target labels.
+	const ACTUAL_LABEL_RADIUS = ACTUAL_RADIUS * 0.6;
 
 	const targetSlices = $derived(
 		computeAnnularSlices(
@@ -72,23 +70,13 @@
 			: []
 	);
 
-	// Same marker-line treatment as the target ring's labels, pointing at each actual
-	// slice instead so its percentage can also be read directly off the chart.
+	// Labels for the actual-holdings slices sit directly inside each slice instead of
+	// pointing outward, since the target ring already occupies the space around the
+	// outside of the chart.
 	const actualSliceLabels = $derived(
 		actualSlices.map((slice, i) => {
-			const lineStart = pointOnCircle(CENTER, CENTER, ACTUAL_RADIUS, slice.midAngleDeg);
-			const lineEnd = pointOnCircle(CENTER, CENTER, ACTUAL_LABEL_LINE_RADIUS, slice.midAngleDeg);
-			const textPoint = pointOnCircle(CENTER, CENTER, ACTUAL_LABEL_TEXT_RADIUS, slice.midAngleDeg);
-			const anchor =
-				textPoint.x > CENTER + 1 ? 'start' : textPoint.x < CENTER - 1 ? 'end' : 'middle';
-			return {
-				key: slice.key,
-				lineStart,
-				lineEnd,
-				textPoint,
-				anchor,
-				pct: actualParts[i]?.pct ?? 0
-			};
+			const textPoint = pointOnCircle(CENTER, CENTER, ACTUAL_LABEL_RADIUS, slice.midAngleDeg);
+			return { key: slice.key, textPoint, pct: actualParts[i]?.pct ?? 0 };
 		})
 	);
 
@@ -125,19 +113,12 @@
 			>
 		{/each}
 		{#each actualSliceLabels as label (label.key)}
-			<line
-				x1={label.lineStart.x}
-				y1={label.lineStart.y}
-				x2={label.lineEnd.x}
-				y2={label.lineEnd.y}
-				class="label-line actual-label-line"
-			/>
 			<text
 				x={label.textPoint.x}
 				y={label.textPoint.y}
-				text-anchor={label.anchor}
+				text-anchor="middle"
 				dominant-baseline="middle"
-				class="label-text">{label.pct.toFixed(1)}%</text
+				class="label-text actual-label-text">{label.pct.toFixed(1)}%</text
 			>
 		{/each}
 	</svg>
@@ -149,14 +130,9 @@
 {#if !barsOnly}
 	<ul class="legend">
 		{#each parts as part, i (part.key)}
-			{@const actualPct = actualParts[i]?.pct ?? 0}
 			<li>
 				<span class="swatch" style:background={PART_COLORS[i % PART_COLORS.length]}></span>
 				<span class="legend-name">{partNames.nameFor(part)}</span>
-				<span class="legend-pct">
-					{total > 0 ? `${actualPct.toFixed(1)}%` : '—'}
-					<span class="legend-target">of {part.targetPct}%</span>
-				</span>
 			</li>
 		{/each}
 	</ul>
@@ -196,7 +172,7 @@
 	.chart {
 		position: relative;
 		width: 100%;
-		max-width: 25rem;
+		max-width: 21rem;
 		aspect-ratio: 1;
 		margin: 1rem auto;
 	}
@@ -216,14 +192,15 @@
 		stroke-width: 1;
 	}
 
-	.actual-label-line {
-		stroke-dasharray: 2 2;
-	}
-
 	.label-text {
 		font-size: 9px;
 		font-weight: 600;
 		fill: #0f172a;
+	}
+
+	.actual-label-text {
+		font-size: 7px;
+		fill: #fff;
 	}
 
 	.legend {
@@ -232,14 +209,15 @@
 		padding: 0;
 		max-width: 20rem;
 		display: flex;
-		flex-direction: column;
-		gap: 0.375rem;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5rem 1rem;
 	}
 
 	.legend li {
 		display: flex;
-		align-items: baseline;
-		gap: 0.5rem;
+		align-items: center;
+		gap: 0.375rem;
 		font-size: 0.8125rem;
 	}
 
@@ -248,29 +226,11 @@
 		width: 0.625rem;
 		height: 0.625rem;
 		border-radius: 999px;
-		align-self: center;
 	}
 
 	.legend-name {
-		flex: 1;
-		min-width: 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
 		white-space: nowrap;
 		color: #0f172a;
-	}
-
-	.legend-pct {
-		flex-shrink: 0;
-		font-variant-numeric: tabular-nums;
-		color: #0f172a;
-		font-weight: 600;
-	}
-
-	.legend-target {
-		margin-left: 0.25rem;
-		font-weight: 400;
-		color: #64748b;
 	}
 
 	.empty-hint {
