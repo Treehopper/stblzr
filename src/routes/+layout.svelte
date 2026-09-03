@@ -10,6 +10,13 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<!-- In standalone/PWA mode, iOS paints the safe-area and overscroll regions using
+	     <html>'s own background rather than any descendant element's - without this, a
+	     gap there (e.g. below the fixed-height app shell) shows through as a stray white
+	     bar instead of the theme's background. Rendered here (rather than set via an
+	     $effect) so it's applied as part of the initial render, avoiding a flash of white. -->
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -- theme.bg is a hardcoded hex value from src/lib/themes.ts, not user input -->
+	{@html `<style>html{background:${theme.bg}}</style>`}
 </svelte:head>
 
 <div
