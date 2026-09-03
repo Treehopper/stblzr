@@ -100,7 +100,7 @@
 			<path
 				d={slice.path}
 				fill={partColors[i % partColors.length]}
-				stroke="#fff"
+				stroke="var(--bg)"
 				stroke-width="1"
 			/>
 		{/each}
