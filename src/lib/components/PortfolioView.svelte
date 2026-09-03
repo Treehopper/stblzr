@@ -2,7 +2,6 @@
 	import AppScreen from '$lib/components/AppScreen.svelte';
 	import HoldingsRow from '$lib/components/HoldingsRow.svelte';
 	import PieChart from '$lib/components/PieChart.svelte';
-	import { PART_COLORS } from '$lib/colors';
 	import { formatCurrency, formatDate } from '$lib/currency';
 	import { getTemplate } from '$lib/portfolio';
 	import { buyOnlyActions, sellAndRebuyMinimalActions } from '$lib/rebalance';
@@ -10,7 +9,10 @@
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
 	import { partNames } from '$lib/state/part-names.svelte';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
+	import { themeSelection } from '$lib/state/theme.svelte';
+	import { getTheme } from '$lib/themes';
 
+	const partColors = $derived(getTheme(themeSelection.id).partColors);
 	const template = $derived(templateSelection.id ? getTemplate(templateSelection.id) : undefined);
 	// Rebalance actions carry the template's default part label; resolve the
 	// user's custom name (if any) by part key instead of trusting it verbatim.
@@ -20,7 +22,7 @@
 	// Same color a part gets in the pie chart, so the holdings and rebalance
 	// rows below visually link back to their chart slice.
 	const colorByKey = $derived(
-		new Map(template?.parts.map((part, i) => [part.key, PART_COLORS[i % PART_COLORS.length]]) ?? [])
+		new Map(template?.parts.map((part, i) => [part.key, partColors[i % partColors.length]]) ?? [])
 	);
 
 	const totalHoldings = $derived(
@@ -79,7 +81,7 @@
 				<h2>Current holdings</h2>
 				{#key holdingsVersion}
 					{#each template.parts as part (part.key)}
-						<HoldingsRow {part} color={colorByKey.get(part.key) ?? PART_COLORS[0]} />
+						<HoldingsRow {part} color={colorByKey.get(part.key) ?? partColors[0]} />
 					{/each}
 				{/key}
 				<div class="total-row">
@@ -128,7 +130,7 @@
 								<span class="action-label">
 									<span
 										class="swatch"
-										style:background={colorByKey.get(action.partKey) ?? PART_COLORS[0]}
+										style:background={colorByKey.get(action.partKey) ?? partColors[0]}
 									></span>
 									{action.type === 'buy' ? 'Buy' : 'Sell'}
 									{partLabelByKey.get(action.partKey) ?? action.partLabel}

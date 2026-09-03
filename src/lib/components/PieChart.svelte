@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { PART_COLORS } from '$lib/colors';
 	import { computeAnnularSlices, pointOnCircle } from '$lib/pie';
 	import type { PortfolioPart } from '$lib/portfolio';
+	import { themeSelection } from '$lib/state/theme.svelte';
 	import { viewportSize } from '$lib/state/viewport.svelte';
+	import { getTheme } from '$lib/themes';
 
 	let {
 		parts,
@@ -11,6 +12,8 @@
 		parts: PortfolioPart[];
 		holdings?: Record<string, number>;
 	} = $props();
+
+	const partColors = $derived(getTheme(themeSelection.id).partColors);
 
 	// The viewBox is wider than the ring itself so the target-percentage labels have
 	// room to sit outside it without being clipped - kept as tight as the widest
@@ -91,12 +94,12 @@
 	<svg viewBox="0 0 {VIEWBOX} {VIEWBOX}" class="pie" role="img" aria-label="Portfolio allocation">
 		<circle class="track" cx={CENTER} cy={CENTER} r={TARGET_OUTER_RADIUS} />
 		{#each targetSlices as slice, i (slice.key)}
-			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
+			<path d={slice.path} fill={partColors[i % partColors.length]} />
 		{/each}
 		{#each actualSlices as slice, i (slice.key)}
 			<path
 				d={slice.path}
-				fill={PART_COLORS[i % PART_COLORS.length]}
+				fill={partColors[i % partColors.length]}
 				stroke="#fff"
 				stroke-width="1"
 			/>
@@ -143,7 +146,7 @@
 			<span
 				class="segment"
 				style:width="{part.targetPct}%"
-				style:background={PART_COLORS[i % PART_COLORS.length]}
+				style:background={partColors[i % partColors.length]}
 			></span>
 		{/each}
 	</span>
@@ -153,7 +156,7 @@
 				<span
 					class="segment"
 					style:width="{part.pct}%"
-					style:background={PART_COLORS[i % PART_COLORS.length]}
+					style:background={partColors[i % partColors.length]}
 				></span>
 			{/each}
 		</span>

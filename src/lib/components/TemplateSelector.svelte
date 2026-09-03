@@ -1,10 +1,13 @@
 <script lang="ts">
 	import AppScreen from '$lib/components/AppScreen.svelte';
-	import { PART_COLORS } from '$lib/colors';
 	import { CURRENCY_OPTIONS } from '$lib/currency';
 	import { PORTFOLIO_TEMPLATES } from '$lib/portfolio';
 	import { currencySelection } from '$lib/state/currency.svelte';
 	import { templateSelection } from '$lib/state/portfolio-template.svelte';
+	import { themeSelection } from '$lib/state/theme.svelte';
+	import { getTheme } from '$lib/themes';
+
+	const partColors = $derived(getTheme(themeSelection.id).partColors);
 </script>
 
 <AppScreen title="Choose your portfolio template">
@@ -70,7 +73,7 @@
 								<span
 									class="segment"
 									style:width="{part.targetPct}%"
-									style:background={PART_COLORS[i % PART_COLORS.length]}
+									style:background={partColors[i % partColors.length]}
 								></span>
 							{/each}
 						</span>

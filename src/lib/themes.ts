@@ -16,6 +16,11 @@ export interface Theme {
 	borderStrong: string;
 	headerText: string;
 	warning: string;
+	// Colors for the pie-chart/holdings-list slices (up to 3, one per portfolio part).
+	// Chosen per theme from blue/teal/green hues only - never orange or red (reserved
+	// for warnings) and never purple (a specific ask, even where it's the theme's own
+	// accent, e.g. Dracula/Rosé Pine).
+	partColors: [string, string, string];
 }
 
 // Ten light and ten dark schemes: a few originals (Daybreak/Midnight, Sand, Mint,
@@ -40,7 +45,8 @@ export const THEMES: Theme[] = [
 		border: '#cbd5e1',
 		borderStrong: '#94a3b8',
 		headerText: '#ffffff',
-		warning: '#b45309'
+		warning: '#b45309',
+		partColors: ['#2563eb', '#0d9488', '#16a34a']
 	},
 	{
 		id: 'solarized-light',
@@ -57,7 +63,8 @@ export const THEMES: Theme[] = [
 		border: '#d3cbb7',
 		borderStrong: '#93a1a1',
 		headerText: '#fdf6e3',
-		warning: '#cb4b16'
+		warning: '#cb4b16',
+		partColors: ['#268bd2', '#2aa198', '#859900']
 	},
 	{
 		id: 'nord-light',
@@ -74,7 +81,8 @@ export const THEMES: Theme[] = [
 		border: '#d8dee9',
 		borderStrong: '#b9c2d0',
 		headerText: '#eceff4',
-		warning: '#d08770'
+		warning: '#d08770',
+		partColors: ['#5e81ac', '#88c0d0', '#a3be8c']
 	},
 	{
 		id: 'gruvbox-light',
@@ -91,7 +99,8 @@ export const THEMES: Theme[] = [
 		border: '#d5c4a1',
 		borderStrong: '#bdae93',
 		headerText: '#fbf1c7',
-		warning: '#d65d0e'
+		warning: '#d65d0e',
+		partColors: ['#458588', '#98971a', '#689d6a']
 	},
 	{
 		id: 'catppuccin-latte',
@@ -108,7 +117,8 @@ export const THEMES: Theme[] = [
 		border: '#ccd0da',
 		borderStrong: '#acb0be',
 		headerText: '#eff1f5',
-		warning: '#fe640b'
+		warning: '#fe640b',
+		partColors: ['#1e66f5', '#179299', '#40a02b']
 	},
 	{
 		id: 'one-light',
@@ -125,7 +135,8 @@ export const THEMES: Theme[] = [
 		border: '#e5e5e6',
 		borderStrong: '#c9c9ca',
 		headerText: '#fafafa',
-		warning: '#c18401'
+		warning: '#c18401',
+		partColors: ['#4078f2', '#0184bc', '#50a14f']
 	},
 	{
 		id: 'github-light',
@@ -142,7 +153,8 @@ export const THEMES: Theme[] = [
 		border: '#d1d9e0',
 		borderStrong: '#b6bcc3',
 		headerText: '#ffffff',
-		warning: '#9a6700'
+		warning: '#9a6700',
+		partColors: ['#0969da', '#0891b2', '#1a7f37']
 	},
 	{
 		id: 'rose-pine-dawn',
@@ -159,7 +171,10 @@ export const THEMES: Theme[] = [
 		border: '#dfdad9',
 		borderStrong: '#cecacd',
 		headerText: '#faf4ed',
-		warning: '#ea9d34'
+		warning: '#ea9d34',
+		// Rosé Pine's own accent ("iris") is purple, so this skips it in favor of the
+		// palette's teal/cyan pine+foam plus a custom earthy green to match.
+		partColors: ['#286983', '#56949f', '#6a8f52']
 	},
 	{
 		id: 'sand',
@@ -176,7 +191,10 @@ export const THEMES: Theme[] = [
 		border: '#e6d8c3',
 		borderStrong: '#cbb797',
 		headerText: '#fdfaf6',
-		warning: '#b3541e'
+		warning: '#b3541e',
+		// Sand's own accent is an orange/brown, so this uses muted blue/teal/green
+		// instead to keep warm warning-adjacent hues off the chart.
+		partColors: ['#3b6ea5', '#3f7d76', '#4f7942']
 	},
 	{
 		id: 'mint',
@@ -193,7 +211,8 @@ export const THEMES: Theme[] = [
 		border: '#b7e4d8',
 		borderStrong: '#86cdb9',
 		headerText: '#f6fdfb',
-		warning: '#b45309'
+		warning: '#b45309',
+		partColors: ['#0d9488', '#059669', '#0e7490']
 	},
 	// --- Dark ---
 	{
@@ -211,7 +230,8 @@ export const THEMES: Theme[] = [
 		border: '#334155',
 		borderStrong: '#475569',
 		headerText: '#f8fafc',
-		warning: '#fbbf24'
+		warning: '#fbbf24',
+		partColors: ['#3b82f6', '#14b8a6', '#22c55e']
 	},
 	{
 		id: 'solarized-dark',
@@ -228,7 +248,8 @@ export const THEMES: Theme[] = [
 		border: '#0a4552',
 		borderStrong: '#586e75',
 		headerText: '#fdf6e3',
-		warning: '#cb4b16'
+		warning: '#cb4b16',
+		partColors: ['#268bd2', '#2aa198', '#859900']
 	},
 	{
 		id: 'dracula',
@@ -245,7 +266,10 @@ export const THEMES: Theme[] = [
 		border: '#44475a',
 		borderStrong: '#6272a4',
 		headerText: '#f8f8f2',
-		warning: '#ffb86c'
+		warning: '#ffb86c',
+		// Dracula's own accent is purple, so this skips it for the palette's cyan/green
+		// plus its muted blue-gray "comment" color for a third distinct hue.
+		partColors: ['#8be9fd', '#50fa7b', '#6272a4']
 	},
 	{
 		id: 'nord',
@@ -262,7 +286,8 @@ export const THEMES: Theme[] = [
 		border: '#434c5e',
 		borderStrong: '#4c566a',
 		headerText: '#eceff4',
-		warning: '#ebcb8b'
+		warning: '#ebcb8b',
+		partColors: ['#88c0d0', '#5e81ac', '#a3be8c']
 	},
 	{
 		id: 'gruvbox-dark',
@@ -279,7 +304,8 @@ export const THEMES: Theme[] = [
 		border: '#504945',
 		borderStrong: '#665c54',
 		headerText: '#fbf1c7',
-		warning: '#fe8019'
+		warning: '#fe8019',
+		partColors: ['#83a598', '#b8bb26', '#8ec07c']
 	},
 	{
 		id: 'catppuccin-mocha',
@@ -296,7 +322,8 @@ export const THEMES: Theme[] = [
 		border: '#45475a',
 		borderStrong: '#585b70',
 		headerText: '#cdd6f4',
-		warning: '#fab387'
+		warning: '#fab387',
+		partColors: ['#89b4fa', '#94e2d5', '#a6e3a1']
 	},
 	{
 		id: 'one-dark',
@@ -313,7 +340,8 @@ export const THEMES: Theme[] = [
 		border: '#3b4048',
 		borderStrong: '#4b5263',
 		headerText: '#dbe1e8',
-		warning: '#e5c07b'
+		warning: '#e5c07b',
+		partColors: ['#61afef', '#56b6c2', '#98c379']
 	},
 	{
 		id: 'github-dark',
@@ -330,7 +358,8 @@ export const THEMES: Theme[] = [
 		border: '#30363d',
 		borderStrong: '#444c56',
 		headerText: '#f0f6fc',
-		warning: '#d29922'
+		warning: '#d29922',
+		partColors: ['#4493f8', '#39c5cf', '#3fb950']
 	},
 	{
 		id: 'tokyo-night',
@@ -347,7 +376,8 @@ export const THEMES: Theme[] = [
 		border: '#2f3549',
 		borderStrong: '#414868',
 		headerText: '#c0caf5',
-		warning: '#e0af68'
+		warning: '#e0af68',
+		partColors: ['#7aa2f7', '#7dcfff', '#9ece6a']
 	},
 	{
 		id: 'rose-pine',
@@ -364,7 +394,10 @@ export const THEMES: Theme[] = [
 		border: '#26233a',
 		borderStrong: '#403d52',
 		headerText: '#e0def4',
-		warning: '#f6c177'
+		warning: '#f6c177',
+		// Rosé Pine's own accent ("iris") is purple, so this skips it in favor of the
+		// palette's teal/cyan pine+foam plus a custom soft green to match.
+		partColors: ['#31748f', '#9ccfd8', '#7aa87c']
 	}
 ];
 
