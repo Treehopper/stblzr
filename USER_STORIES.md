@@ -17,6 +17,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 - [x] **US-4**: As a user, I see a pie chart of my target allocation (e.g. 50/30/20 across the three portfolio parts) so I understand what I'm aiming for.
 - [x] **US-18**: As a user, the pie chart has a legend below it, with a color swatch, name, and current-vs-target percentage for each part, and those same swatch colors appear next to the matching rows in "Current holdings" and "Rebalance", so I can read the chart instead of guessing at it.
+- [x] **US-22**: As a user, I see a percentage label with a marker line pointing at each pie slice, so I can read a part's target share directly off the chart without cross-referencing the legend.
 
 ## Current holdings input
 
@@ -36,7 +37,6 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **US-16**: As a user, I pick one rebalancing option at a time via side-by-side buttons and act on it with a single Apply button, rather than seeing both options with their own Apply buttons at once; within the sell-and-rebuy plan, sells are listed above buys.
 - [x] **US-17**: As a user, buy and sell amounts in a rebalancing plan are always whole currency units - if the exact target math would need cents, the amount is rounded up so applying the plan never leaves me short of target.
 - [x] **US-20**: As a user, I see a total row under a rebalancing plan's line items (total to invest for buy-only, total to move for buy-and-sell), so I don't have to add up the individual actions myself.
-- [x] **US-21**: As a user, if my portfolio is already within 5% of target on every part, I'm told no action is needed instead of being shown a plan for a trivial trade.
 
 ## Backlog / not yet scoped
 

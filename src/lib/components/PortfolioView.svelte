@@ -5,12 +5,7 @@
 	import { PART_COLORS } from '$lib/colors';
 	import { formatCurrency, formatDate } from '$lib/currency';
 	import { getTemplate } from '$lib/portfolio';
-	import {
-		buyOnlyActions,
-		maxDeviationPct,
-		REBALANCE_TOLERANCE_PCT,
-		sellAndRebuyMinimalActions
-	} from '$lib/rebalance';
+	import { buyOnlyActions, sellAndRebuyMinimalActions } from '$lib/rebalance';
 	import { currencySelection } from '$lib/state/currency.svelte';
 	import { portfolioHoldings } from '$lib/state/holdings.svelte';
 	import { partNames } from '$lib/state/part-names.svelte';
@@ -34,12 +29,6 @@
 			: 0
 	);
 
-	const withinTolerance = $derived(
-		template && totalHoldings > 0
-			? maxDeviationPct(template, portfolioHoldings.all) <= REBALANCE_TOLERANCE_PCT
-			: false
-	);
-
 	const buyActions = $derived(template ? buyOnlyActions(template, portfolioHoldings.all) : []);
 	// Sells listed above buys within the sell-and-rebuy plan.
 	const sellAndRebuyActions = $derived(
@@ -52,15 +41,11 @@
 
 	let selectedOption = $state<'buy' | 'sellRebuy'>('buy');
 	const activeActions = $derived(selectedOption === 'buy' ? buyActions : sellAndRebuyActions);
-	// Even when the exact-match math finds a (possibly tiny) trade, a portfolio already
-	// within tolerance shouldn't prompt one.
-	const showActions = $derived(activeActions.length > 0 && !withinTolerance);
+	const showActions = $derived(activeActions.length > 0);
 	const activePlanLabel = $derived(
-		withinTolerance
-			? `Within ${REBALANCE_TOLERANCE_PCT}% of target — no action needed.`
-			: selectedOption === 'buy'
-				? 'Already balanced — nothing to buy.'
-				: 'Already balanced — nothing to sell or buy.'
+		selectedOption === 'buy'
+			? 'Already balanced — nothing to buy.'
+			: 'Already balanced — nothing to sell or buy.'
 	);
 	const totalActionAmount = $derived(
 		activeActions.filter((action) => action.type === 'buy').reduce((sum, a) => sum + a.amount, 0)

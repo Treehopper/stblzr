@@ -61,4 +61,17 @@ describe('computeAnnularSlices', () => {
 
 		expect(slice.path.match(/A /g)).toHaveLength(4);
 	});
+
+	it('reports the mid-angle of each slice, in degrees clockwise from the top', () => {
+		const slices = computeAnnularSlices(
+			[
+				{ key: 'a', pct: 50 },
+				{ key: 'b', pct: 25 },
+				{ key: 'c', pct: 25 }
+			],
+			{ innerRadius: 0, outerRadius: 48 }
+		);
+
+		expect(slices.map((s) => s.midAngleDeg)).toEqual([90, 225, 315]);
+	});
 });
