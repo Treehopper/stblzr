@@ -6,7 +6,15 @@
 	let { title, children }: { title: string; children: Snippet } = $props();
 </script>
 
-<div class="screen" style:top="{viewportSize.offsetTop}px" style:height="{viewportSize.height}px">
+<!-- visualViewport.height (what viewportSize.height tracks) excludes the bottom safe
+     area even in standalone/PWA mode with viewport-fit=cover, unlike the 100dvh CSS
+     fallback below - without adding it back, the shell falls short of the real bottom
+     edge, leaving a gap iOS fills with <html>'s own background instead of ours. -->
+<div
+	class="screen"
+	style:top="{viewportSize.offsetTop}px"
+	style:height="calc({viewportSize.height}px + env(safe-area-inset-bottom))"
+>
 	<AppHeader {title} />
 	<div class="scroll-area">
 		{@render children()}
