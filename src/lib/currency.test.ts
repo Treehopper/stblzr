@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatAmount, formatCurrency, parseAmountInput } from './currency';
+import { formatAmount, formatCurrency, formatDate, parseAmountInput } from './currency';
 
 describe('formatCurrency', () => {
 	it('formats EUR with a period thousands separator and no cents', () => {
@@ -23,6 +23,19 @@ describe('formatAmount', () => {
 	it('uses the same grouping as formatCurrency, without the currency symbol', () => {
 		expect(formatAmount(400511, 'EUR')).toBe('400.511');
 		expect(formatAmount(400511, 'USD')).toBe('400,511');
+	});
+});
+
+describe('formatDate', () => {
+	const timestamp = Date.UTC(2026, 2, 15, 12);
+
+	it('formats using the currency locale, short month, and full year', () => {
+		expect(formatDate(timestamp, 'USD')).toBe('Mar 15, 2026');
+	});
+
+	it('uses a different format per locale', () => {
+		expect(formatDate(timestamp, 'EUR')).toContain('2026');
+		expect(formatDate(timestamp, 'EUR')).not.toBe(formatDate(timestamp, 'USD'));
 	});
 });
 

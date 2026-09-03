@@ -78,9 +78,7 @@
 			autofocus
 		/>
 	{:else}
-		<button type="button" class="name" onclick={startEditingName}>
-			{partNames.nameFor(part)}
-		</button>
+		<button type="button" class="name" onclick={startEditingName}>{partNames.nameFor(part)}</button>
 	{/if}
 	<span class="input-group">
 		<span class="currency-symbol">{currencySymbol}</span>
