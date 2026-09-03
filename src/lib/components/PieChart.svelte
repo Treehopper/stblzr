@@ -2,7 +2,6 @@
 	import { PART_COLORS } from '$lib/colors';
 	import { computeAnnularSlices, pointOnCircle } from '$lib/pie';
 	import type { PortfolioPart } from '$lib/portfolio';
-	import { partNames } from '$lib/state/part-names.svelte';
 	import { viewportSize } from '$lib/state/viewport.svelte';
 
 	let {
@@ -36,7 +35,7 @@
 	);
 
 	// A short marker line plus label pointing at each target slice, so its percentage
-	// can be read directly off the chart instead of only from the legend below.
+	// can be read directly off the chart.
 	const sliceLabels = $derived(
 		targetSlices.map((slice, i) => {
 			const lineStart = pointOnCircle(CENTER, CENTER, TARGET_OUTER_RADIUS, slice.midAngleDeg);
@@ -94,7 +93,12 @@
 			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} />
 		{/each}
 		{#each actualSlices as slice, i (slice.key)}
-			<path d={slice.path} fill={PART_COLORS[i % PART_COLORS.length]} stroke="#fff" stroke-width="1" />
+			<path
+				d={slice.path}
+				fill={PART_COLORS[i % PART_COLORS.length]}
+				stroke="#fff"
+				stroke-width="1"
+			/>
 		{/each}
 		{#each sliceLabels as label (label.key)}
 			<line
@@ -126,17 +130,6 @@
 		<p class="empty-hint">Enter your holdings below</p>
 	{/if}
 </div>
-
-{#if !barsOnly}
-	<ul class="legend">
-		{#each parts as part, i (part.key)}
-			<li>
-				<span class="swatch" style:background={PART_COLORS[i % PART_COLORS.length]}></span>
-				<span class="legend-name">{partNames.nameFor(part)}</span>
-			</li>
-		{/each}
-	</ul>
-{/if}
 
 <div
 	class="bars"
@@ -201,36 +194,6 @@
 	.actual-label-text {
 		font-size: 7px;
 		fill: #fff;
-	}
-
-	.legend {
-		list-style: none;
-		margin: 0 auto 1rem;
-		padding: 0;
-		max-width: 20rem;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 0.5rem 1rem;
-	}
-
-	.legend li {
-		display: flex;
-		align-items: center;
-		gap: 0.375rem;
-		font-size: 0.8125rem;
-	}
-
-	.swatch {
-		flex-shrink: 0;
-		width: 0.625rem;
-		height: 0.625rem;
-		border-radius: 999px;
-	}
-
-	.legend-name {
-		white-space: nowrap;
-		color: #0f172a;
 	}
 
 	.empty-hint {

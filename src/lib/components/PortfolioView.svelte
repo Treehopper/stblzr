@@ -17,7 +17,7 @@
 	const partLabelByKey = $derived(
 		new Map(template?.parts.map((part) => [part.key, partNames.nameFor(part)]) ?? [])
 	);
-	// Same color a part gets in the pie chart legend, so the holdings and rebalance
+	// Same color a part gets in the pie chart, so the holdings and rebalance
 	// rows below visually link back to their chart slice.
 	const colorByKey = $derived(
 		new Map(template?.parts.map((part, i) => [part.key, PART_COLORS[i % PART_COLORS.length]]) ?? [])
