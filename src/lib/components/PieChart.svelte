@@ -13,16 +13,17 @@
 	} = $props();
 
 	// The viewBox is wider than the ring itself so the target-percentage labels have
-	// room to sit outside it without being clipped. `.chart`'s max-width is scaled up
-	// by the same factor, so the ring's on-screen size is unchanged - only the margin
-	// available for labels grows.
-	const VIEWBOX = 168;
-	const CENTER = 84;
+	// room to sit outside it without being clipped - kept as tight as the widest
+	// label ("70%") allows, so the ring isn't surrounded by excess empty margin.
+	// `.chart`'s max-width is scaled by the same factor, so the ring's on-screen
+	// size stays put regardless of how much of that margin the labels need.
+	const VIEWBOX = 156;
+	const CENTER = 78;
 	const ACTUAL_RADIUS = 40;
 	const TARGET_INNER_RADIUS = 42;
 	const TARGET_OUTER_RADIUS = 52;
-	const LABEL_LINE_RADIUS = TARGET_OUTER_RADIUS + 6;
-	const LABEL_TEXT_RADIUS = TARGET_OUTER_RADIUS + 10;
+	const LABEL_LINE_RADIUS = TARGET_OUTER_RADIUS + 4;
+	const LABEL_TEXT_RADIUS = TARGET_OUTER_RADIUS + 7;
 	// The actual disc's own labels sit inside its slices (rather than pointing
 	// outward like the target ring's) so they don't collide with the target labels.
 	const ACTUAL_LABEL_RADIUS = ACTUAL_RADIUS * 0.6;
@@ -165,7 +166,7 @@
 	.chart {
 		position: relative;
 		width: 100%;
-		max-width: 21rem;
+		max-width: 19.5rem;
 		aspect-ratio: 1;
 		margin: 1rem auto;
 	}
