@@ -17,7 +17,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 - [x] **US-4**: As a user, I see a pie chart of my target allocation (e.g. 50/30/20 across the three portfolio parts) so I understand what I'm aiming for.
 - [x] **US-18**: As a user, the pie chart has a legend below it, with a color swatch, name, and current-vs-target percentage for each part, and those same swatch colors appear next to the matching rows in "Current holdings" and "Rebalance", so I can read the chart instead of guessing at it.
-- [x] **US-22**: As a user, I see a percentage label with a marker line pointing at each pie slice, so I can read a part's target share directly off the chart without cross-referencing the legend.
+- [x] **US-22**: As a user, I see a percentage label with a marker line pointing at each pie slice - both the target ring and the actual-holdings disc - so I can read a part's target and actual share directly off the chart without cross-referencing the legend.
 
 ## Current holdings input
 
