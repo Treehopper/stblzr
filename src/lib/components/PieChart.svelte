@@ -91,32 +91,59 @@
 			: []
 	);
 
-	// A slice's label only fits without risking overlap with its neighbor's if the
-	// slice is wide enough, at the label's radius, to hold the label's text - a fixed
-	// label radius/font size doesn't shrink along with a narrow slice, which is what let
-	// two small holdings' labels collide. Hidden below that rather than shrunk further,
-	// since illegibly tiny text isn't useful either.
-	function actualLabelFits(pct: number): boolean {
+	// Measured (via SVG getBBox against the real, styled element - a synthetic one
+	// doesn't pick up Svelte's scoped CSS class, so it silently renders at the
+	// browser's default font size instead of this 7px one) rendered size of a label at
+	// this font: ~4.8 SVG units per character (plus a little padding) wide, and a
+	// constant ~8 tall regardless of the digits in it.
+	function labelSize(pct: number) {
 		const text = `${pct.toFixed(1)}%`;
-		// Measured (via SVG getBBox, not guessed) rendered width of this label text at
-		// the 7-unit bold label font: ~9 SVG units per character, with a little padding
-		// so a label doesn't sit flush against its slice's edges.
-		const estimatedWidth = text.length * 9 + 1;
-		const arcWidth = ACTUAL_LABEL_RADIUS * ((pct / 100) * 2 * Math.PI);
-		return arcWidth >= estimatedWidth;
+		return { width: text.length * 4.8 + 1, height: 8 };
+	}
+
+	function labelBox(pct: number, point: { x: number; y: number }) {
+		const { width, height } = labelSize(pct);
+		return {
+			left: point.x - width / 2,
+			right: point.x + width / 2,
+			top: point.y - height / 2,
+			bottom: point.y + height / 2
+		};
+	}
+
+	function boxesOverlap(
+		a: { left: number; right: number; top: number; bottom: number },
+		b: { left: number; right: number; top: number; bottom: number }
+	) {
+		return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
 	}
 
 	// Labels for the actual-holdings slices sit directly inside each slice instead of
 	// pointing outward, since the target ring already occupies the space around the
-	// outside of the chart.
-	const actualSliceLabels = $derived(
-		actualSlices
-			.map((slice, i) => {
-				const textPoint = pointOnCircle(CENTER_X, CENTER_Y, ACTUAL_LABEL_RADIUS, slice.midAngleDeg);
-				return { key: slice.key, textPoint, pct: actualParts[i]?.pct ?? 0 };
-			})
-			.filter((label) => actualLabelFits(label.pct))
-	);
+	// outside of the chart. A label is only hidden when it would actually collide with
+	// a *neighboring* slice's label (checked pairwise around the ring, not each
+	// label's own slice width) - a single small slice between two large ones has
+	// nothing to collide with and keeps its label; two small slices next to each other
+	// don't.
+	const actualSliceLabels = $derived.by(() => {
+		const candidates = actualSlices.map((slice, i) => {
+			const textPoint = pointOnCircle(CENTER_X, CENTER_Y, ACTUAL_LABEL_RADIUS, slice.midAngleDeg);
+			const pct = actualParts[i]?.pct ?? 0;
+			return { key: slice.key, textPoint, pct, box: labelBox(pct, textPoint) };
+		});
+
+		const hidden: Record<string, true> = {};
+		for (let i = 0; i < candidates.length; i++) {
+			const a = candidates[i];
+			const b = candidates[(i + 1) % candidates.length];
+			if (a.key === b.key || hidden[a.key] || hidden[b.key]) continue;
+			if (boxesOverlap(a.box, b.box)) {
+				hidden[a.pct <= b.pct ? a.key : b.key] = true;
+			}
+		}
+
+		return candidates.filter((label) => !hidden[label.key]);
+	});
 
 	// Vertical space gets tight when the on-screen keyboard opens on a phone. Drop to
 	// horizontal bars once there's too little height for the pie chart. Driven by the
