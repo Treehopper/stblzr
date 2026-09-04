@@ -6,13 +6,14 @@
 	let { title, children }: { title: string; children: Snippet } = $props();
 </script>
 
-<!-- Whether visualViewport.height includes the bottom safe area at rest is inconsistent
-     across devices, so the shell used to always add env(safe-area-inset-bottom) back on
-     top of it - which overshot on devices where it was already included, leaving a
-     same-color-as-the-page but visibly separate band at the bottom whenever the keyboard
-     was closed. Only overriding position/height while the keyboard is actually open
-     sidesteps that: at rest, the plain CSS below (mirroring how <body> itself is sized)
-     is trusted on its own, with no safe-area math needed. -->
+<!-- At rest, .screen's bottom edge is anchored via `inset: 0` below, not a percentage
+     height - a percentage height falls short of the true bottom edge by the safe-area
+     amount on iOS even under viewport-fit=cover (this cost two earlier attempts:
+     `height: 100%` seemed like it should behave like <body>'s `inset: 0`, but only
+     edge-anchoring actually reaches past the inset). While the keyboard is open, the
+     inline top/height below (which CSS lets override the anchored top/bottom edges)
+     takes over, matching the live visual viewport instead. -->
+
 <div
 	class="screen"
 	style:top={viewportSize.keyboardOpen ? `${viewportSize.offsetTop}px` : undefined}
@@ -27,10 +28,7 @@
 <style>
 	.screen {
 		position: fixed;
-		left: 0;
-		right: 0;
-		top: 0;
-		height: 100%;
+		inset: 0;
 		display: flex;
 		flex-direction: column;
 		/* The very first keyboard-open can also collapse Safari's own address/tab bar,
