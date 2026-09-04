@@ -23,19 +23,16 @@ function readOffsetTop(): number {
 let height = $state(readHeight());
 let offsetTop = $state(readOffsetTop());
 
-// The tallest height observed since load - the keyboard-closed baseline. Whether
-// visualViewport.height includes the bottom safe area at rest is inconsistent across
-// devices, so the app shell used to always add env(safe-area-inset-bottom) back on top
-// of it, which overshot on devices where it was already included and left a
-// same-color-as-the-page but visibly separate band at the bottom. Comparing the live
-// height against this baseline - rather than trusting either reading in isolation - is
-// what tells the shell whether the keyboard is actually open.
+// The tallest height observed since load - the keyboard-closed baseline.
 let maxHeight = $state(height);
 
 // How much shorter than the baseline counts as "the keyboard is open". Comfortably
 // bigger than any safe-area inset (~34px on current hardware) so that alone can't
 // misfire this, but well under any real keyboard's height.
 const KEYBOARD_OPEN_THRESHOLD = 150;
+
+// How close to the baseline counts as "fully recovered" after the keyboard closes.
+const RECOVERED_THRESHOLD = 4;
 
 if (browser) {
 	// The pan (offsetTop) has to track every event immediately - any lag makes the app
@@ -72,6 +69,42 @@ if (browser) {
 	window.visualViewport?.addEventListener('resize', syncHeight);
 	window.visualViewport?.addEventListener('scroll', syncHeight);
 	window.addEventListener('resize', syncHeight);
+
+	// Confirmed WebKit bug, standalone/home-screen PWA only: the first time the
+	// on-screen keyboard opens, window.innerHeight/visualViewport.height/100dvh all
+	// shrink and then never recompute back to the true full height for the rest of the
+	// session - not even once the keyboard is fully dismissed - short of force-quitting
+	// the app. No amount of reading those values more cleverly fixes this, because the
+	// values themselves are wrong from that point on. The only known workaround is
+	// forcing WebKit to recompute by triggering a synchronous reflow: toggle a
+	// full-viewport element's display off and back on. See
+	// https://dev.to/cederhook/fixing-the-ios-standalone-pwa-keyboard-bug-that-shrinks-your-viewport-for-good-63d
+	const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+	const healViewport = () => {
+		if (!isStandalone) return;
+		if (maxHeight - readHeight() <= RECOVERED_THRESHOLD) return;
+		const root = document.querySelector<HTMLElement>('.theme-root');
+		if (!root) return;
+		const prevDisplay = root.style.display;
+		root.style.display = 'none';
+		void root.offsetHeight; // force a synchronous reflow before restoring
+		root.style.display = prevDisplay;
+		syncHeight();
+	};
+
+	if (isStandalone) {
+		document.addEventListener(
+			'focusout',
+			(event) => {
+				if (!(event.target instanceof HTMLElement)) return;
+				if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)) return;
+				// Give iOS's own close animation a moment to finish reporting its (wrong)
+				// final height before checking whether it needs correcting.
+				setTimeout(healViewport, 140);
+			},
+			true
+		);
+	}
 }
 
 export const viewportSize = {
