@@ -12,20 +12,17 @@
 	<link rel="icon" href={favicon} />
 	<!-- iOS paints the safe-area/overscroll regions using <html>'s own background rather
 	     than any descendant element's, so a gap there would otherwise show through as a
-	     stray white bar. AppScreen.svelte's shell tries to extend into the bottom safe
-	     area (via env(safe-area-inset-bottom)) in PWA/standalone mode, but that depends on
-	     visualViewport reporting accurately, which isn't reliable on every device - so, as
-	     a backstop, standalone mode also gets this fallback, painted with the header's own
-	     color (accentDark, the bottom end of its gradient) rather than the page bg, since
-	     any gap that slips through sits directly below the header. Plain-browser-tab Safari
-	     keeps using the page bg, matching scrollable content instead. Rendered here (rather
-	     than via an $effect) so it's applied as part of the initial render, avoiding a flash
-	     of the wrong color. -->
-	<!-- eslint-disable-next-line svelte/no-at-html-tags -- theme.bg/accentDark are hardcoded hex values from src/lib/themes.ts, not user input -->
-	{@html `<style>
-		@media not all and (display-mode: standalone) { html { background: ${theme.bg} } }
-		@media (display-mode: standalone) { html { background: ${theme.accentDark} } }
-	</style>`}
+	     stray bar. AppScreen.svelte's shell tries to extend into the bottom safe area (via
+	     env(safe-area-inset-bottom)) in PWA/standalone mode, but that depends on
+	     visualViewport reporting accurately, which isn't reliable on every device - any
+	     shortfall shows up as a gap at the very bottom of the screen (the shell is always
+	     flush against the top), not below the header, so this backstop is painted with the
+	     page's own background rather than the header's accent color: a bottom gap should
+	     blend into the content behind it, not stand out as a differently-colored bar.
+	     Rendered here (rather than via an $effect) so it's applied as part of the initial
+	     render, avoiding a flash of the wrong color. -->
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -- theme.bg is a hardcoded hex value from src/lib/themes.ts, not user input -->
+	{@html `<style>html { background: ${theme.bg} }</style>`}
 </svelte:head>
 
 <div
