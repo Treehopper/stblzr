@@ -23,6 +23,20 @@ function readOffsetTop(): number {
 let height = $state(readHeight());
 let offsetTop = $state(readOffsetTop());
 
+// The tallest height observed since load - the keyboard-closed baseline. Whether
+// visualViewport.height includes the bottom safe area at rest is inconsistent across
+// devices, so the app shell used to always add env(safe-area-inset-bottom) back on top
+// of it, which overshot on devices where it was already included and left a
+// same-color-as-the-page but visibly separate band at the bottom. Comparing the live
+// height against this baseline - rather than trusting either reading in isolation - is
+// what tells the shell whether the keyboard is actually open.
+let maxHeight = $state(height);
+
+// How much shorter than the baseline counts as "the keyboard is open". Comfortably
+// bigger than any safe-area inset (~34px on current hardware) so that alone can't
+// misfire this, but well under any real keyboard's height.
+const KEYBOARD_OPEN_THRESHOLD = 150;
+
 if (browser) {
 	// The pan (offsetTop) has to track every event immediately - any lag makes the app
 	// shell visibly lag behind the native pan for a frame or two, which reads as a jump.
@@ -42,15 +56,17 @@ if (browser) {
 	// blip (the blip only ever reads taller), so only debounce growth; apply shrinks the
 	// instant they arrive.
 	let debounce: ReturnType<typeof setTimeout> | undefined;
+	const commit = (next: number) => {
+		height = next;
+		if (next > maxHeight) maxHeight = next;
+	};
 	const syncHeight = () => {
 		clearTimeout(debounce);
 		const next = readHeight();
 		if (next <= height) {
-			height = next;
+			commit(next);
 		} else {
-			debounce = setTimeout(() => {
-				height = readHeight();
-			}, 100);
+			debounce = setTimeout(() => commit(readHeight()), 100);
 		}
 	};
 	window.visualViewport?.addEventListener('resize', syncHeight);
@@ -64,5 +80,8 @@ export const viewportSize = {
 	},
 	get offsetTop() {
 		return offsetTop;
+	},
+	get keyboardOpen() {
+		return maxHeight - height > KEYBOARD_OPEN_THRESHOLD;
 	}
 };

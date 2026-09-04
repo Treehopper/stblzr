@@ -6,14 +6,17 @@
 	let { title, children }: { title: string; children: Snippet } = $props();
 </script>
 
-<!-- visualViewport.height (what viewportSize.height tracks) excludes the bottom safe
-     area even in standalone/PWA mode with viewport-fit=cover, unlike the 100dvh CSS
-     fallback below - without adding it back, the shell falls short of the real bottom
-     edge, leaving a gap iOS fills with <html>'s own background instead of ours. -->
+<!-- Whether visualViewport.height includes the bottom safe area at rest is inconsistent
+     across devices, so the shell used to always add env(safe-area-inset-bottom) back on
+     top of it - which overshot on devices where it was already included, leaving a
+     same-color-as-the-page but visibly separate band at the bottom whenever the keyboard
+     was closed. Only overriding position/height while the keyboard is actually open
+     sidesteps that: at rest, the plain CSS below (mirroring how <body> itself is sized)
+     is trusted on its own, with no safe-area math needed. -->
 <div
 	class="screen"
-	style:top="{viewportSize.offsetTop}px"
-	style:height="calc({viewportSize.height}px + env(safe-area-inset-bottom))"
+	style:top={viewportSize.keyboardOpen ? `${viewportSize.offsetTop}px` : undefined}
+	style:height={viewportSize.keyboardOpen ? `${viewportSize.height}px` : undefined}
 >
 	<AppHeader {title} />
 	<div class="scroll-area">
@@ -27,7 +30,7 @@
 		left: 0;
 		right: 0;
 		top: 0;
-		height: 100dvh;
+		height: 100%;
 		display: flex;
 		flex-direction: column;
 		/* The very first keyboard-open can also collapse Safari's own address/tab bar,
