@@ -78,7 +78,7 @@
 			<PieChart parts={template.parts} holdings={portfolioHoldings.all} />
 
 			<section>
-				<h2>Current holdings</h2>
+				<h2 class="holdings-heading">Current holdings</h2>
 				{#key holdingsVersion}
 					{#each template.parts as part (part.key)}
 						<HoldingsRow {part} color={colorByKey.get(part.key) ?? partColors[0]} />
@@ -160,13 +160,19 @@
 	.portfolio {
 		max-width: 28rem;
 		margin: 0 auto;
-		padding: 1.5rem 1rem;
+		padding: 0.75rem 1rem 1.5rem;
 		color: var(--text);
 	}
 
 	h2 {
 		font-size: 1rem;
 		margin: 1.5rem 0 0.5rem;
+	}
+
+	/* The chart above already provides its own bottom margin as breathing room, so this
+	   heading doesn't need its usual top margin stacked on top of that too. */
+	.holdings-heading {
+		margin-top: 0;
 	}
 
 	.warning {

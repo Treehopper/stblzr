@@ -16,12 +16,25 @@
 	const partColors = $derived(getTheme(themeSelection.id).partColors);
 
 	// The viewBox is wider than the ring itself so the target-percentage labels have
-	// room to sit outside it without being clipped - kept as tight as the widest
-	// label ("70%") allows, so the ring isn't surrounded by excess empty margin.
-	// `.chart`'s max-width is scaled by the same factor, so the ring's on-screen
-	// size stays put regardless of how much of that margin the labels need.
-	const VIEWBOX = 156;
-	const CENTER = 78;
+	// room to sit outside it without being clipped. Target percentages only ever take
+	// one of four values (20/30/50/70, the two templates' parts) so there's one exact
+	// worst case, not a hypothetical one: the 50/30/20 template's 50% slice always
+	// lands its midpoint exactly on the 3 o'clock line, where its label is anchored
+	// purely to one side rather than centered. Sized to that exact measured width (via
+	// SVG getBBox), not a rounder guess - anything beyond it is wasted margin.
+	//
+	// Vertically, the worst case isn't a current template's label but a hypothetical
+	// one landing exactly on the 12/6 o'clock line: text-anchor is 'middle' there (see
+	// sliceLabels below), so the label's width no longer matters and its height does -
+	// centered on its point via dominant-baseline="middle", which (measured, not
+	// assumed symmetric - font metrics put more of a digit's height above the baseline
+	// than below) reaches 6.52 units above and 4.19 below. Sized to fit that exactly,
+	// same as the horizontal case, so a future template with a part landing there still
+	// wouldn't clip - not because either current template's labels need this room.
+	const VIEWBOX_WIDTH = 161;
+	const VIEWBOX_HEIGHT = 129;
+	const CENTER_X = 80.5;
+	const CENTER_Y = 65.7;
 	const ACTUAL_RADIUS = 40;
 	const TARGET_INNER_RADIUS = 42;
 	const TARGET_OUTER_RADIUS = 52;
@@ -34,7 +47,12 @@
 	const targetSlices = $derived(
 		computeAnnularSlices(
 			parts.map((part) => ({ key: part.key, pct: part.targetPct })),
-			{ cx: CENTER, cy: CENTER, innerRadius: TARGET_INNER_RADIUS, outerRadius: TARGET_OUTER_RADIUS }
+			{
+				cx: CENTER_X,
+				cy: CENTER_Y,
+				innerRadius: TARGET_INNER_RADIUS,
+				outerRadius: TARGET_OUTER_RADIUS
+			}
 		)
 	);
 
@@ -42,11 +60,11 @@
 	// can be read directly off the chart.
 	const sliceLabels = $derived(
 		targetSlices.map((slice, i) => {
-			const lineStart = pointOnCircle(CENTER, CENTER, TARGET_OUTER_RADIUS, slice.midAngleDeg);
-			const lineEnd = pointOnCircle(CENTER, CENTER, LABEL_LINE_RADIUS, slice.midAngleDeg);
-			const textPoint = pointOnCircle(CENTER, CENTER, LABEL_TEXT_RADIUS, slice.midAngleDeg);
+			const lineStart = pointOnCircle(CENTER_X, CENTER_Y, TARGET_OUTER_RADIUS, slice.midAngleDeg);
+			const lineEnd = pointOnCircle(CENTER_X, CENTER_Y, LABEL_LINE_RADIUS, slice.midAngleDeg);
+			const textPoint = pointOnCircle(CENTER_X, CENTER_Y, LABEL_TEXT_RADIUS, slice.midAngleDeg);
 			const anchor =
-				textPoint.x > CENTER + 1 ? 'start' : textPoint.x < CENTER - 1 ? 'end' : 'middle';
+				textPoint.x > CENTER_X + 1 ? 'start' : textPoint.x < CENTER_X - 1 ? 'end' : 'middle';
 			return { key: slice.key, lineStart, lineEnd, textPoint, anchor, pct: parts[i].targetPct };
 		})
 	);
@@ -65,22 +83,39 @@
 	const actualSlices = $derived(
 		total > 0
 			? computeAnnularSlices(actualParts, {
-					cx: CENTER,
-					cy: CENTER,
+					cx: CENTER_X,
+					cy: CENTER_Y,
 					innerRadius: 0,
 					outerRadius: ACTUAL_RADIUS
 				})
 			: []
 	);
 
+	// A slice's label only fits without risking overlap with its neighbor's if the
+	// slice is wide enough, at the label's radius, to hold the label's text - a fixed
+	// label radius/font size doesn't shrink along with a narrow slice, which is what let
+	// two small holdings' labels collide. Hidden below that rather than shrunk further,
+	// since illegibly tiny text isn't useful either.
+	function actualLabelFits(pct: number): boolean {
+		const text = `${pct.toFixed(1)}%`;
+		// Measured (via SVG getBBox, not guessed) rendered width of this label text at
+		// the 7-unit bold label font: ~9 SVG units per character, with a little padding
+		// so a label doesn't sit flush against its slice's edges.
+		const estimatedWidth = text.length * 9 + 1;
+		const arcWidth = ACTUAL_LABEL_RADIUS * ((pct / 100) * 2 * Math.PI);
+		return arcWidth >= estimatedWidth;
+	}
+
 	// Labels for the actual-holdings slices sit directly inside each slice instead of
 	// pointing outward, since the target ring already occupies the space around the
 	// outside of the chart.
 	const actualSliceLabels = $derived(
-		actualSlices.map((slice, i) => {
-			const textPoint = pointOnCircle(CENTER, CENTER, ACTUAL_LABEL_RADIUS, slice.midAngleDeg);
-			return { key: slice.key, textPoint, pct: actualParts[i]?.pct ?? 0 };
-		})
+		actualSlices
+			.map((slice, i) => {
+				const textPoint = pointOnCircle(CENTER_X, CENTER_Y, ACTUAL_LABEL_RADIUS, slice.midAngleDeg);
+				return { key: slice.key, textPoint, pct: actualParts[i]?.pct ?? 0 };
+			})
+			.filter((label) => actualLabelFits(label.pct))
 	);
 
 	// Vertical space gets tight when the on-screen keyboard opens on a phone. Drop to
@@ -91,8 +126,13 @@
 </script>
 
 <div class="chart" style:display={barsOnly ? 'none' : undefined}>
-	<svg viewBox="0 0 {VIEWBOX} {VIEWBOX}" class="pie" role="img" aria-label="Portfolio allocation">
-		<circle class="track" cx={CENTER} cy={CENTER} r={TARGET_OUTER_RADIUS} />
+	<svg
+		viewBox="0 0 {VIEWBOX_WIDTH} {VIEWBOX_HEIGHT}"
+		class="pie"
+		role="img"
+		aria-label="Portfolio allocation"
+	>
+		<circle class="track" cx={CENTER_X} cy={CENTER_Y} r={TARGET_OUTER_RADIUS} />
 		{#each targetSlices as slice, i (slice.key)}
 			<path d={slice.path} fill={partColors[i % partColors.length]} />
 		{/each}
@@ -169,9 +209,8 @@
 	.chart {
 		position: relative;
 		width: 100%;
-		max-width: 19.5rem;
-		aspect-ratio: 1;
-		margin: 1rem auto;
+		aspect-ratio: 161 / 129;
+		margin: 0;
 	}
 
 	.pie {
