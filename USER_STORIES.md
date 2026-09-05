@@ -38,6 +38,7 @@ Status legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] **US-16**: As a user, I pick one rebalancing option at a time via side-by-side buttons and act on it with a single Apply button, rather than seeing both options with their own Apply buttons at once; within the sell-and-rebuy plan, sells are listed above buys.
 - [x] **US-17**: As a user, buy and sell amounts in a rebalancing plan are always whole currency units - if the exact target math would need cents, the amount is rounded up so applying the plan never leaves me short of target.
 - [x] **US-20**: As a user, I see a total row under a rebalancing plan's line items (total to invest for buy-only, total to move for buy-and-sell), so I don't have to add up the individual actions myself.
+- [x] **US-24**: As a user, I can tap a small copy icon next to a rebalancing action's amount to copy the raw number (no currency symbol or separators) to my clipboard, so I can paste it directly into my broker's app.
 
 ## Backlog / not yet scoped
 

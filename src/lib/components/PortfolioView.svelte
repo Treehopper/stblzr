@@ -70,6 +70,22 @@
 		}
 		holdingsVersion += 1;
 	}
+
+	// Briefly identifies the action whose amount was just copied, so the icon
+	// can show a checkmark for a moment as feedback. Cleared after a short delay.
+	// Keyed by plan + part key, since the same part key appears in both the
+	// "buy only" and "sell and rebuy" plans with different amounts.
+	let copiedActionKey = $state<string | null>(null);
+	const actionKey = (action: { partKey: string }) => `${selectedOption}:${action.partKey}`;
+
+	async function copyAmount(action: { partKey: string; amount: number }) {
+		await navigator.clipboard.writeText(String(action.amount));
+		const key = actionKey(action);
+		copiedActionKey = key;
+		setTimeout(() => {
+			if (copiedActionKey === key) copiedActionKey = null;
+		}, 1500);
+	}
 </script>
 
 <AppScreen title="Your portfolio">
@@ -135,9 +151,65 @@
 									{action.type === 'buy' ? 'Buy' : 'Sell'}
 									{partLabelByKey.get(action.partKey) ?? action.partLabel}
 								</span>
-								<span class="action-amount"
-									>{formatCurrency(action.amount, currencySelection.id)}</span
-								>
+								<span class="action-amount-group">
+									<span class="action-amount"
+										>{formatCurrency(action.amount, currencySelection.id)}</span
+									>
+									<button
+										type="button"
+										class="copy-button"
+										aria-label="Copy {action.amount} to clipboard"
+										onclick={() => copyAmount(action)}
+									>
+										{#if copiedActionKey === actionKey(action)}
+											<svg
+												viewBox="0 0 20 20"
+												width="14"
+												height="14"
+												aria-hidden="true"
+												focusable="false"
+											>
+												<path
+													d="M4 10.5l4 4 8-9"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="1.75"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												/>
+											</svg>
+										{:else}
+											<svg
+												viewBox="0 0 20 20"
+												width="14"
+												height="14"
+												aria-hidden="true"
+												focusable="false"
+											>
+												<rect
+													x="7"
+													y="3"
+													width="9"
+													height="12"
+													rx="1.25"
+													fill="none"
+													stroke="currentColor"
+													stroke-width="1.5"
+												/>
+												<rect
+													x="4"
+													y="6"
+													width="9"
+													height="12"
+													rx="1.25"
+													fill="var(--surface)"
+													stroke="currentColor"
+													stroke-width="1.5"
+												/>
+											</svg>
+										{/if}
+									</button>
+								</span>
 							</li>
 						{/each}
 					</ul>
@@ -263,10 +335,41 @@
 		align-self: center;
 	}
 
-	.action-amount {
+	.action-amount-group {
 		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.action-amount {
 		text-align: right;
 		font-variant-numeric: tabular-nums;
+	}
+
+	.copy-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.25rem;
+		height: 1.25rem;
+		padding: 0;
+		background: none;
+		border: none;
+		border-radius: 0.25rem;
+		color: var(--text-muted);
+		cursor: pointer;
+		box-shadow: none;
+	}
+
+	.copy-button:hover {
+		background: var(--surface-alt);
+		filter: none;
+	}
+
+	.copy-button:active {
+		box-shadow: none;
+		transform: none;
 	}
 
 	.total-row {
