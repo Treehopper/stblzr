@@ -73,13 +73,17 @@
 
 	// Briefly identifies the action whose amount was just copied, so the icon
 	// can show a checkmark for a moment as feedback. Cleared after a short delay.
-	let copiedPartKey = $state<string | null>(null);
+	// Keyed by plan + part key, since the same part key appears in both the
+	// "buy only" and "sell and rebuy" plans with different amounts.
+	let copiedActionKey = $state<string | null>(null);
+	const actionKey = (action: { partKey: string }) => `${selectedOption}:${action.partKey}`;
 
 	async function copyAmount(action: { partKey: string; amount: number }) {
 		await navigator.clipboard.writeText(String(action.amount));
-		copiedPartKey = action.partKey;
+		const key = actionKey(action);
+		copiedActionKey = key;
 		setTimeout(() => {
-			if (copiedPartKey === action.partKey) copiedPartKey = null;
+			if (copiedActionKey === key) copiedActionKey = null;
 		}, 1500);
 	}
 </script>
@@ -157,7 +161,7 @@
 										aria-label="Copy {action.amount} to clipboard"
 										onclick={() => copyAmount(action)}
 									>
-										{#if copiedPartKey === action.partKey}
+										{#if copiedActionKey === actionKey(action)}
 											<svg
 												viewBox="0 0 20 20"
 												width="14"
