@@ -3,7 +3,7 @@
 	import { viewportSize } from '$lib/state/viewport.svelte';
 	import type { Snippet } from 'svelte';
 
-	let { title, children }: { title: string; children: Snippet } = $props();
+	let { children }: { children: Snippet } = $props();
 </script>
 
 <!-- At rest, .screen's bottom edge is anchored via `inset: 0` below, not a percentage
@@ -19,7 +19,7 @@
 	style:top={viewportSize.keyboardOpen ? `${viewportSize.offsetTop}px` : undefined}
 	style:height={viewportSize.keyboardOpen ? `${viewportSize.height}px` : undefined}
 >
-	<AppHeader {title} />
+	<AppHeader />
 	<div class="scroll-area">
 		{@render children()}
 	</div>
