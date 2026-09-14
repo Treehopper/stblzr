@@ -12,8 +12,6 @@
 
 <AppScreen>
 	<div class="selector">
-		<p class="intro">Pick the target allocation you want to rebalance towards.</p>
-
 		<div class="currency-picker">
 			<span class="currency-label" id="currency-label">Currency</span>
 			<div class="currency-options" role="group" aria-labelledby="currency-label">
@@ -34,6 +32,7 @@
 		</div>
 
 		<h2 class="templates-heading">Choose template</h2>
+		<p class="intro">Pick the target allocation you want to rebalance towards.</p>
 		<ul class="templates">
 			{#each PORTFOLIO_TEMPLATES as template (template.id)}
 				{@const isSelected = templateSelection.id === template.id}
@@ -93,14 +92,14 @@
 	}
 
 	.intro {
-		margin: 0 0 1.5rem;
+		margin: 0 0 0.75rem;
 		color: var(--text-muted);
 	}
 
 	.templates-heading {
 		font-size: 1rem;
 		font-weight: 600;
-		margin: 0 0 0.75rem;
+		margin: 0 0 0.25rem;
 	}
 
 	.currency-picker {
