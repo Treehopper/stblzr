@@ -1,8 +1,6 @@
 <script lang="ts">
 	import ThemeMenu from '$lib/components/ThemeMenu.svelte';
 
-	let { title }: { title: string } = $props();
-
 	let menuOpen = $state(false);
 </script>
 
@@ -22,7 +20,7 @@
 				<rect x="2" y="13.9" width="16" height="1.6" rx="0.8" fill="currentColor" />
 			</svg>
 		</button>
-		<h1>{title}</h1>
+		<h1>Rebalance your Portfolio</h1>
 		<span class="spacer" aria-hidden="true"></span>
 	</div>
 </header>

@@ -88,7 +88,7 @@
 	}
 </script>
 
-<AppScreen title="Your portfolio">
+<AppScreen>
 	<div class="portfolio">
 		{#if template}
 			<PieChart parts={template.parts} holdings={portfolioHoldings.all} />

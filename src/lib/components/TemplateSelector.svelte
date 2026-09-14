@@ -10,7 +10,7 @@
 	const partColors = $derived(getTheme(themeSelection.id).partColors);
 </script>
 
-<AppScreen title="Choose your portfolio template">
+<AppScreen>
 	<div class="selector">
 		<p class="intro">Pick the target allocation you want to rebalance towards.</p>
 
